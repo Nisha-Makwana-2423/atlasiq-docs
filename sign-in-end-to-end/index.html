@@ -1,0 +1,1067 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AtlasIQ Sign-in and Access Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>/* Layout: a sticky top bar with the guide's views; each view is a centered column (max 1180px).
+   The journey view adds a sticky stage rail on the left. Colors follow AtlasIQ's Copilot tokens, with one
+   color per role used only beside a text label. */
+:root{
+  --bg:#f6f6fb;--surface:#ffffff;--inset:#f0f1f8;--line:#dfe2ee;--line-strong:#b9bfd3;
+  --fg:#161a2e;--muted:#4a5068;--accent:#4338ca;--accent-ink:#ffffff;--link:#3b30b8;--focus:#4338ca;
+  --main:#14613f;--main-tint:#e5f3ea;--alt:#8a4b00;--alt-tint:#fbf1e1;--exc:#a3272f;--exc-tint:#fbe9ea;--gap:#4a5068;--gap-tint:#eef0f5;
+  --r-nct:#8a4b00;--t-nct:#fbf1e1;--r-sys:#3f4a5e;--t-sys:#eceef4;--r-sv:#4338ca;--t-sv:#ecebfd;--r-ix:#1f5f8b;--t-ix:#e6f0f8;
+  --r-pv:#0b6e66;--t-pv:#e3f2ef;--r-rv:#7a2e6e;--t-rv:#f6e9f3;--r-qa:#14613f;--t-qa:#e5f3ea;--r-su:#4a5068;--t-su:#eef0f5;
+  --band:#eef0f7;--shadow:0 1px 2px rgba(22,26,46,.06),0 4px 14px rgba(22,26,46,.05);
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1b2130;--surface:#242c3d;--inset:#2b3447;--line:#364158;--line-strong:#56627f;
+  --fg:#e6edf7;--muted:#b3bfd1;--accent:#4338ca;--accent-ink:#ffffff;--link:#b4b0ff;--focus:#b4b0ff;
+  --main:#5ff0ae;--main-tint:#1e3a2e;--alt:#f5c56e;--alt-tint:#3a3122;--exc:#ffab91;--exc-tint:#43262a;--gap:#c3cde0;--gap-tint:#2f3747;
+  --r-nct:#f5c56e;--t-nct:#3a3122;--r-sys:#c3cde0;--t-sys:#2f3747;--r-sv:#b4b0ff;--t-sv:#2f2c5e;--r-ix:#8cc4ee;--t-ix:#1f3446;
+  --r-pv:#7fe3d6;--t-pv:#1d3a38;--r-rv:#e6a3d8;--t-rv:#3a2638;--r-qa:#5ff0ae;--t-qa:#1e3a2e;--r-su:#c3cde0;--t-su:#2f3747;
+  --band:#212839;--shadow:0 1px 2px rgba(0,0,0,.3);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1b2130;--surface:#242c3d;--inset:#2b3447;--line:#364158;--line-strong:#56627f;
+  --fg:#e6edf7;--muted:#b3bfd1;--accent:#4338ca;--accent-ink:#ffffff;--link:#b4b0ff;--focus:#b4b0ff;
+  --main:#5ff0ae;--main-tint:#1e3a2e;--alt:#f5c56e;--alt-tint:#3a3122;--exc:#ffab91;--exc-tint:#43262a;--gap:#c3cde0;--gap-tint:#2f3747;
+  --r-nct:#f5c56e;--t-nct:#3a3122;--r-sys:#c3cde0;--t-sys:#2f3747;--r-sv:#b4b0ff;--t-sv:#2f2c5e;--r-ix:#8cc4ee;--t-ix:#1f3446;
+  --r-pv:#7fe3d6;--t-pv:#1d3a38;--r-rv:#e6a3d8;--t-rv:#3a2638;--r-qa:#5ff0ae;--t-qa:#1e3a2e;--r-su:#c3cde0;--t-su:#2f3747;
+  --band:#212839;--shadow:0 1px 2px rgba(0,0,0,.3);color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--link);text-underline-offset:2px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.mono,code{font-family:var(--mono);font-size:.9em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;background:var(--accent);color:var(--accent-ink);padding:8px 14px;border-radius:8px;z-index:50}
+.skip:focus{top:calc(8px + env(safe-area-inset-top,0px))}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:20px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;flex:none;text-decoration:none;color:var(--fg)}
+.brand-mk{width:30px;height:30px;border-radius:8px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.brand b{font-weight:600;font-size:15px;display:block;line-height:1.15}
+.brand small{display:block;font-size:12px;color:var(--muted);line-height:1.2}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;text-decoration:none;color:var(--muted);font-weight:500;font-size:14px;padding:8px 12px;border-radius:8px;white-space:nowrap}
+.tabs a:hover{background:var(--inset);color:var(--fg)}
+.tabs a[aria-current="page"]{background:var(--t-sv);color:var(--r-sv)}
+.theme-btn{flex:none;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;color:var(--fg)}
+.theme-btn:hover{background:var(--inset)}
+
+/* page */
+main{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.view{display:grid;gap:36px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-.01em}
+.h2{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.25}
+.h3{font-size:17px;font-weight:600;line-height:1.35}
+.lede{font-size:18px;color:var(--muted);max-width:68ch}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.sec-head{display:grid;gap:6px;max-width:72ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.pad{padding:20px 22px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grid{display:grid;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:9px 14px;font-weight:500;font-size:14px;cursor:pointer;text-decoration:none;border:1px solid transparent;line-height:1.2}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.sec{background:var(--surface);border-color:var(--line-strong);color:var(--fg)}
+.btn.sec:hover{background:var(--inset)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* role chip */
+.role{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:3px 9px 3px 7px;border-radius:999px;background:var(--rt);color:var(--fg);border:1px solid color-mix(in srgb,var(--rc) 35%,transparent);white-space:nowrap}
+.role i{width:9px;height:9px;border-radius:50%;background:var(--rc);flex:none}
+.role.nct{--rc:var(--r-nct);--rt:var(--t-nct)}.role.sys{--rc:var(--r-sys);--rt:var(--t-sys)}.role.sv{--rc:var(--r-sv);--rt:var(--t-sv)}.role.ix{--rc:var(--r-ix);--rt:var(--t-ix)}
+.role.pv{--rc:var(--r-pv);--rt:var(--t-pv)}.role.rv{--rc:var(--r-rv);--rt:var(--t-rv)}.role.qa{--rc:var(--r-qa);--rt:var(--t-qa)}.role.su{--rc:var(--r-su);--rt:var(--t-su)}
+
+/* path tags */
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap;letter-spacing:.01em}
+.tag svg{flex:none}
+.tag.main{background:var(--main-tint);color:var(--main)}
+.tag.alt{background:var(--alt-tint);color:var(--alt)}
+.tag.exc{background:var(--exc-tint);color:var(--exc)}
+.tag.gap,.tag.scope{background:var(--gap-tint);color:var(--gap);border:1px dashed var(--gap)}
+.tag.confirm{background:var(--alt-tint);color:var(--alt)}
+.tag.differs{background:var(--exc-tint);color:var(--exc)}
+.srs{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--inset);border-radius:5px;padding:1px 6px}
+
+/* screen chip */
+.scr{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);border-radius:9px;padding:4px 10px 4px 4px;cursor:pointer;text-align:left;max-width:100%}
+.scr:hover{border-color:var(--accent);background:var(--inset)}
+.scr img{width:46px;height:30px;object-fit:cover;object-position:top left;border-radius:5px;border:1px solid var(--line);flex:none;background:var(--inset)}
+.scr code{font-weight:500;color:var(--fg)}
+.scr span{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.scr.g code{color:var(--r-pv)}
+.scrs{display:flex;flex-wrap:wrap;gap:8px}
+
+/* overview */
+.hero{display:grid;gap:14px;max-width:880px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:4px}
+.fact b{font-family:var(--serif);font-size:28px;font-weight:600;display:block;line-height:1.1;font-variant-numeric:tabular-nums}
+.fact span{font-size:14px;color:var(--muted)}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.howto a{display:grid;gap:4px;text-decoration:none;color:var(--fg);padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.howto a:hover{border-color:var(--accent)}
+.howto a b{font-weight:600}
+.howto a span{font-size:14px;color:var(--muted)}
+.mapwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.map{display:block;min-width:1060px;width:100%;height:auto}
+.map text{fill:var(--fg);font-family:var(--sans)}
+.map .lane-h{font-size:12.5px;font-weight:600}
+.map .lane-k{font-size:11px;fill:var(--muted)}
+.map .band-n{font-family:var(--serif);font-size:20px;font-weight:600;fill:var(--muted)}
+.map .band-t{font-size:12.5px;font-weight:600}
+.map .node rect{stroke-width:1.5}
+.map .node text{font-size:12px}
+.map .node:hover rect,.map .node:focus-visible rect{stroke-width:3}
+.map .node:focus{outline:none}
+.map .node:focus-visible rect{stroke:var(--focus)}
+.map .edge{fill:none;stroke:var(--line-strong);stroke-width:1.6}
+.map .edge.main{stroke:var(--muted)}
+.map .edge.loop{stroke-dasharray:5 4}
+.map .badge circle{fill:var(--surface);stroke:var(--fg);stroke-width:1.4}
+.map .badge text{font-size:11px;font-weight:700;text-anchor:middle}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px 24px;padding:16px 20px;border-top:1px solid var(--line)}
+.legend li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.legend ol{list-style:none;margin:0;padding:0;display:contents}
+.lgb{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--fg);display:grid;place-items:center;font-size:11px;font-weight:700}
+.stages{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.stage-c{display:grid;gap:10px;align-content:start;padding:18px 20px;text-decoration:none;color:var(--fg);border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.stage-c:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.stage-c .sn{font-family:var(--serif);font-size:15px;color:var(--muted);font-weight:600}
+.stage-c h3{font-size:18px;font-weight:600}
+.stage-c p{font-size:14px;color:var(--muted)}
+.clock{display:grid;gap:0;counter-reset:c;margin:0;padding:0;list-style:none}
+.clock li{display:grid;grid-template-columns:160px 22px 1fr;gap:14px;align-items:start;position:relative;padding-bottom:16px}
+.clock li::after{content:"";position:absolute;left:calc(160px + 14px + 10px);top:22px;bottom:0;width:2px;background:var(--line)}
+.clock li:last-child::after{display:none}
+.clock .d{font-weight:600;font-variant-numeric:tabular-nums;text-align:right;font-size:15px}
+.clock .dot{width:22px;height:22px;border-radius:50%;background:var(--rt);border:2px solid var(--rc);margin-top:1px}
+.clock .w b{display:block;font-weight:600}
+.clock .w span{font-size:14px;color:var(--muted)}
+.status{counter-reset:s;display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.status li{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.status .sn{width:30px;height:30px;border-radius:8px;background:var(--inset);display:grid;place-items:center;font-weight:600;font-variant-numeric:tabular-nums}
+.status b{font-weight:600}
+.status .st-b{display:grid;gap:6px;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.support{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.support li{list-style:none;display:grid;gap:8px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.support ul{margin:0;padding:0;display:contents}
+.support p{font-size:14px}
+
+/* journey */
+.journey{display:grid;grid-template-columns:230px minmax(0,1fr);gap:32px;align-items:start}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);display:grid;gap:2px}
+.rail a{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start;text-decoration:none;color:var(--muted);font-size:14px;padding:8px 10px;border-radius:9px;line-height:1.3}
+.rail a b{font-family:var(--serif);font-weight:600}
+.rail a:hover{background:var(--surface);color:var(--fg)}
+.rail a[aria-current="step"]{background:var(--surface);color:var(--fg);box-shadow:inset 3px 0 0 var(--accent)}
+.rail .rh{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 10px 8px}
+.st-head{display:grid;gap:14px}
+.st-num{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--muted)}
+.st-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st-meta div{background:var(--surface);padding:12px 14px;display:grid;gap:4px;align-content:start}
+.st-meta dt{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.st-meta dd{margin:0;font-size:14px}
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.fi{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;position:relative;padding-bottom:18px;scroll-margin-top:96px}
+.fi::before{content:"";position:absolute;left:21px;top:44px;bottom:0;width:2px;background:var(--line-strong)}
+.fi:last-child::before{display:none}
+.fi .mk{width:44px;height:44px;display:grid;place-items:center;font-weight:600;font-size:13px;font-variant-numeric:tabular-nums;border-radius:12px;background:var(--surface);border:1.5px solid var(--line-strong);position:relative;z-index:1}
+.fi.dec .mk{border:none;background:none}
+.fi.dec .mk svg{position:absolute;inset:0}
+.fi.dec .mk span{position:relative;font-size:12px}
+.fi.always .mk{border-style:dashed}
+.fi-b{display:grid;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.fi.hl .fi-b{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.fi-t{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.fi-t h3{font-size:17px;font-weight:600;flex:1 1 280px}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:6px 14px;font-size:15px}
+.kv dt{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.kv dd{margin:0;min-width:0}
+.go{display:inline-flex;align-items:center;gap:6px;font-weight:500;font-size:14px}
+.go svg{flex:none}
+.outs{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.out{display:grid;gap:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--inset);border-left:4px solid var(--oc)}
+.out.main{--oc:var(--main)}.out.alt{--oc:var(--alt)}.out.exc{--oc:var(--exc)}.out.gap{--oc:var(--gap);border-left-style:dashed}
+.out-h{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.out-h b{font-weight:600}
+.note{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:10px 12px;border-radius:10px}
+.note svg{flex:none;margin-top:2px}
+.note.confirm{background:var(--alt-tint);color:var(--fg)}
+.note.confirm svg{color:var(--alt)}
+.note.gap{background:var(--gap-tint);border:1px dashed var(--gap)}
+.note a{font-weight:500}
+.side-h{margin-top:8px}
+.sides{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.side{display:grid;gap:8px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--oc);scroll-margin-top:96px}
+.side.exc{--oc:var(--exc)}.side.gap{--oc:var(--gap);border-left-style:dashed}
+.st-foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px}
+
+/* exceptions */
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[aria-pressed="true"]{background:var(--t-sv);border-color:var(--r-sv);color:var(--fg)}
+.chip em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--muted)}
+.xgroup{display:grid;gap:10px}
+.xgroup h3{font-family:var(--serif);font-size:19px;font-weight:600}
+.xc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,.9fr);gap:16px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--oc)}
+.xc.exc{--oc:var(--exc)}.xc.alt{--oc:var(--alt)}.xc.gap{--oc:var(--gap);border-left-style:dashed}
+.xc>div{display:grid;gap:6px;align-content:start;min-width:0}
+.xc .lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.role-c{display:grid;gap:12px;align-content:start;padding:18px 20px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--rc)}
+.role-c.nct{--rc:var(--r-nct)}.role-c.sys{--rc:var(--r-sys)}.role-c.sv{--rc:var(--r-sv)}.role-c.ix{--rc:var(--r-ix)}.role-c.pv{--rc:var(--r-pv)}.role-c.rv{--rc:var(--r-rv)}.role-c.qa{--rc:var(--r-qa)}.role-c.su{--rc:var(--r-su)}
+.role-c ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+
+/* screens */
+.tools{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.fld{display:grid;gap:4px}
+.fld label{font-size:13px;font-weight:600}
+.fld select,.fld input{font:inherit;font-size:15px;color:var(--fg);background:var(--surface);border:1.5px solid var(--line-strong);border-radius:9px;padding:8px 10px;min-width:200px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.th{display:grid;gap:0;border-radius:12px;background:var(--surface);border:1px solid var(--line);cursor:pointer;text-align:left;padding:0;overflow:hidden}
+.th:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.th img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top left;display:block;border-bottom:1px solid var(--line);background:var(--inset)}
+.th div{display:grid;gap:6px;padding:10px 12px 12px}
+.th b{font-weight:600;font-size:14px;line-height:1.35}
+.th code{font-weight:500}
+
+/* follow */
+.follow{display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start}
+.fl-list{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100vh - 100px);overflow:auto;display:grid;gap:2px;list-style:none;margin:0;padding:0}
+.fl-list button{display:grid;grid-template-columns:28px 1fr;gap:8px;width:100%;text-align:left;background:none;border:none;border-radius:9px;padding:7px 10px;cursor:pointer;font-size:14px;line-height:1.3;color:var(--muted)}
+.fl-list button:hover{background:var(--surface);color:var(--fg)}
+.fl-list button[aria-current="step"]{background:var(--surface);color:var(--fg);box-shadow:inset 3px 0 0 var(--accent)}
+.fl-list .n{font-variant-numeric:tabular-nums;font-weight:600}
+.fl-main{display:grid;gap:16px;min-width:0}
+.fl-shot{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:70vh;background:var(--inset)}
+.fl-shot img{display:block;width:100%;height:auto}
+.fl-nav{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center}
+
+/* questions */
+.qgroups{display:grid;gap:28px}
+.qs{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.q{display:grid;gap:8px;padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+
+/* dialog */
+dialog.lb{border:none;padding:0;border-radius:16px;background:var(--surface);color:var(--fg);width:min(1180px,calc(100vw - 32px));max-height:calc(100vh - 32px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog.lb::backdrop{background:rgba(14,17,30,.6)}
+.lb-in{display:grid;grid-template-rows:auto minmax(0,1fr);max-height:calc(100vh - 32px)}
+.lb-h{display:flex;gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.lb-h h2{font-size:18px;font-weight:600;flex:1 1 300px;font-family:var(--sans)}
+.lb-b{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0;overflow:hidden}
+.lb-img{overflow:auto;background:var(--inset);border-right:1px solid var(--line);min-height:0}
+.lb-img img{display:block;width:100%;height:auto}
+.lb-side{overflow:auto;padding:16px 18px;display:grid;gap:16px;align-content:start;min-height:0}
+.lb-side h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lb-side ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px}
+.lb-side ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.lb-side section{display:grid;gap:6px}
+.frame{font-family:var(--mono);font-size:12.5px;background:var(--inset);border-radius:8px;padding:8px 10px;word-break:break-word}
+.ib{width:36px;height:36px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);display:grid;place-items:center;cursor:pointer;flex:none}
+.ib:hover{background:var(--inset)}
+.ib[disabled]{opacity:.4;cursor:not-allowed}
+
+@media (max-width:980px){
+  .journey,.follow{grid-template-columns:1fr}
+  .rail,.fl-list{position:static;max-height:none}
+  .rail{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .fl-list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));max-height:260px;overflow:auto}
+  .two{grid-template-columns:1fr}
+  .xc{grid-template-columns:1fr}
+  .lb-b{grid-template-columns:1fr;overflow:auto}
+  .lb-img{border-right:none;border-bottom:1px solid var(--line);max-height:55vh}
+}
+@media (max-width:560px){
+  .clock li{grid-template-columns:1fr;gap:4px;padding-left:34px}
+  .clock li::after{left:10px}
+  .clock .dot{position:absolute;left:0;top:0}
+  .clock .d{text-align:left}
+  .kv{grid-template-columns:1fr;gap:2px}
+  .kv dd{margin-bottom:8px}
+  .brand small{display:none}
+  .fld select,.fld input{min-width:0;width:100%}
+  .fld{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:no-preference){.fi.hl .fi-b{transition:box-shadow .3s}}
+/* keep long chips and text inside their columns at every width */
+.fi-b,.out,.side,.st-b,.stage-c,.role-c,.q,.support li,.grid,.lb-side section,.fl-main,.xgroup{grid-template-columns:minmax(0,1fr)}
+.status li{grid-template-columns:36px minmax(0,1fr)}
+.scr{min-width:0}
+.kv dd,.out p,.side p{overflow-wrap:anywhere}
+[tabindex="-1"]:focus{outline:none}
+
+/* ---------- Sign-in explorer additions ---------- */
+.role.pv{--rc:var(--r-pv);--rt:var(--t-pv)}.role.cp{--rc:var(--r-nct);--rt:var(--t-nct)}.role.st{--rc:var(--r-rv);--rt:var(--t-rv)}.role.sv{--rc:var(--r-sv);--rt:var(--t-sv)}.role.su{--rc:var(--r-su);--rt:var(--t-su)}
+.ex{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+.ex-list{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100vh - 96px);overflow:auto;display:grid;gap:10px;padding-right:4px}
+.ex-list input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1.5px solid var(--line-strong);border-radius:9px;padding:8px 10px;width:100%}
+.ex-list details{border-bottom:1px solid var(--line);padding-bottom:6px}
+.ex-list summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);padding:6px 4px;list-style-position:outside;border-radius:6px}
+.ex-list summary:hover{color:var(--fg)}
+.ex-list .scr-t{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px}
+.ex-list button.st{display:grid;grid-template-columns:44px 1fr;gap:6px;width:100%;text-align:left;background:none;border:none;border-radius:8px;padding:5px 6px;cursor:pointer;font-size:13px;line-height:1.3;color:var(--fg)}
+.ex-list button.st code{color:var(--muted);font-size:12px}
+.ex-list button.st:hover{background:var(--surface)}
+.ex-list button.st[aria-current="true"]{background:var(--t-sv);box-shadow:inset 3px 0 0 var(--accent)}
+.ex-main{display:grid;gap:16px;min-width:0}
+.ex-head{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+.ex-head h1{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.2}
+.ex-head .sub{font-size:15px;color:var(--muted)}
+.ex-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,1fr);gap:18px;align-items:start}
+.ex-shot{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:calc(100vh - 220px);background:var(--inset);position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}
+.ex-shot img{display:block;width:100%;height:auto}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tabs2 button{background:none;border:none;border-bottom:3px solid transparent;padding:8px 10px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.tabs2 button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tabs2 button em{font-style:normal;font-size:12px;background:var(--inset);border-radius:999px;padding:0 7px;color:var(--fg)}
+.panel{display:grid;gap:14px;padding-top:14px}
+.blk{display:grid;gap:6px}
+.blk h3,.blk h2.bh{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.blk ul,.blk ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+.statebox{background:var(--t-sv);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.edges{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.edges li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);border-left:4px solid var(--oc)}
+.edges li.main{--oc:var(--main)}.edges li.alt{--oc:var(--alt)}.edges li.err{--oc:var(--exc)}.edges li.fx{--oc:var(--r-sv)}
+.edges .lab{font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.out-txt{font-size:13px;color:var(--muted);font-style:italic}
+.tag.fx{background:var(--t-sv);color:var(--r-sv)}
+.req{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.req-h{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.req-id{font-family:var(--mono);font-weight:600;font-size:13px;background:var(--t-sv);color:var(--r-sv);border-radius:6px;padding:2px 8px}
+.req blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--line-strong);background:var(--inset);border-radius:0 8px 8px 0;font-size:14px}
+.req .meta{font-size:13px;color:var(--muted);display:grid;gap:2px}
+.warn{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--gap-tint);border:1px dashed var(--gap);font-size:14px}
+.warn.d{background:var(--exc-tint);border:1px solid color-mix(in srgb,var(--exc) 40%,transparent)}
+.warn.c{background:var(--alt-tint);border:1px solid color-mix(in srgb,var(--alt) 40%,transparent)}
+.warn svg{flex:none;margin-top:2px}
+.copyrow{display:flex;gap:8px;align-items:flex-start}
+.copyrow .frame{flex:1;min-width:0}
+.mini{font-size:12px;padding:4px 8px;border-radius:7px}
+.jr{display:grid;gap:8px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.jr h3{font-size:16px;font-weight:600}
+.chipline{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chipline .sep{color:var(--muted);font-size:12px}
+.cchip{font-family:var(--mono);font-size:12.5px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface);border-radius:7px;padding:3px 7px;cursor:pointer;color:var(--fg);text-decoration:none}
+.cchip:hover{border-color:var(--accent);background:var(--inset)}
+.cchip.g{color:var(--r-pv)}
+.flowsvg{display:block;width:100%;height:auto;min-width:620px}
+.flowsvg text{font-family:var(--sans)}
+.flowsvg a:focus{outline:none}
+.flowsvg a:focus-visible rect,.flowsvg a:focus-visible polygon{stroke:var(--focus);stroke-width:3}
+.flowsvg a:hover rect{stroke:var(--accent);stroke-width:2}
+.fwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:8px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tbl table{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--inset);padding:9px 12px;border-bottom:1px solid var(--line-strong)}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.scn{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+.scn-list{display:grid;gap:2px;list-style:none;margin:0;padding:0;position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}
+.scn-list button{width:100%;text-align:left;background:none;border:none;border-radius:9px;padding:8px 10px;cursor:pointer;font-size:14px;color:var(--muted)}
+.scn-list button:hover{background:var(--surface);color:var(--fg)}
+.scn-list button[aria-current="true"]{background:var(--surface);color:var(--fg);box-shadow:inset 3px 0 0 var(--accent)}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.steps button{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer;color:var(--fg);display:inline-flex;gap:6px;align-items:center}
+.steps button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.steps button b{font-variant-numeric:tabular-nums}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.docc{display:grid;gap:6px;padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);scroll-margin-top:90px}
+.docc:target{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.req:target,.q:target{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+@media (max-width:1180px){.ex-body{grid-template-columns:1fr}.ex-shot{position:static;max-height:60vh}}
+@media (max-width:980px){.ex,.scn{grid-template-columns:1fr}.ex-list,.scn-list{position:static;max-height:340px}}
+.ex-list details,.panel,.blk,.req,.jr,.docc{grid-template-columns:minmax(0,1fr)}
+.edges li{grid-template-columns:minmax(0,1fr)}
+.edges li .scr{justify-self:start}
+.ex-list .filters .chip{font-size:13px;padding:4px 10px}
+.ex-body{grid-template-columns:minmax(0,1.45fr) minmax(330px,1fr)}
+.shot-tools{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+dialog.zoom{border:none;padding:0;border-radius:14px;background:var(--surface);color:var(--fg);width:min(1500px,calc(100vw - 24px));max-height:calc(100vh - 24px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog.zoom::backdrop{background:rgba(14,17,30,.65)}
+.zoom-h{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.zoom-b{overflow:auto;max-height:calc(100vh - 90px);background:var(--inset)}
+.zoom-b img{display:block;width:100%;min-width:900px;height:auto}
+.fwrap .flowsvg{max-width:860px;margin:0 auto}
+.jr{align-content:start}
+</style>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar"><div class="bar-in">
+  <a class="brand" href="#overview" aria-label="Sign-in and Access explorer, overview"><span class="brand-mk" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="4" y="8" width="10" height="8" rx="2" fill="currentColor"/><path d="M6 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span><b>Sign-in and Access</b><small>AtlasIQ · developer reference</small></span></a>
+  <nav class="tabs" aria-label="Explorer"><a href="#overview" data-tab="overview">Overview</a><a href="#screens" data-tab="screens">Screen explorer</a><a href="#scenarios" data-tab="scenarios">Scenarios</a><a href="#requirements" data-tab="requirements">Requirements</a><a href="#questions" data-tab="questions">Open points</a><a href="#sources" data-tab="sources">Sources</a></nav>
+  <button type="button" class="theme-btn" id="theme">Dark mode</button>
+</div></header>
+<main id="main" tabindex="-1"></main>
+<dialog class="zoom" id="zoom" aria-modal="true"></dialog>
+<script>const STATES = [{"c":"G-01","k":"g-signin.empty","id":"g-signin","t":"Sign in","n":"Ready to sign in: Sign in is disabled","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["The sign-in page for providers, customers and partners. CQH staff use their own page.",["Enter your email address. Sign in stays disabled until both fields are filled.","Enter your password. Once you start typing, the eye button lets you show or hide it.","Select \"Sign in\". Next, you'll enter a code from your authenticator app.","Forgot it? Select \"Forgot your password?\" to get a reset link.","New agency? Select \"Register your agency\" in the side panel."]],"fr":"Guided · G-01 · Sign in · Ready to sign in: Sign in is disabled","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-02","k":"g-signin.filled","id":"g-signin","t":"Sign in","n":"Email and password entered: password hidden","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["The sign-in page for providers, customers and partners. CQH staff use their own page.",["Enter your email address. Sign in stays disabled until both fields are filled.","Enter your password. Once you start typing, the eye button lets you show or hide it.","Select \"Sign in\". Next, you'll enter a code from your authenticator app.","Forgot it? Select \"Forgot your password?\" to get a reset link.","New agency? Select \"Register your agency\" in the side panel."]],"fr":"Guided · G-02 · Sign in · Email and password entered: password hidden","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-03","k":"g-signin.shown","id":"g-signin","t":"Sign in","n":"Password shown","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["The sign-in page for providers, customers and partners. CQH staff use their own page.",["Enter your email address. Sign in stays disabled until both fields are filled.","Enter your password. Once you start typing, the eye button lets you show or hide it.","Select \"Sign in\". Next, you'll enter a code from your authenticator app.","Forgot it? Select \"Forgot your password?\" to get a reset link.","New agency? Select \"Register your agency\" in the side panel."]],"fr":"Guided · G-03 · Sign in · Password shown","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-04","k":"g-signin.format","id":"g-signin","t":"Sign in","n":"Email address isn't valid","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["The email address isn't in a valid format, so it can't be checked yet.",["Correct the email address. The error under the field disappears as you type.","Select \"Sign in\" again."]],"fr":"Guided · G-04 · Sign in · Email address isn't valid","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-05","k":"g-signin.wrong","id":"g-signin","t":"Sign in","n":"Email or password is incorrect","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["The email address or password didn't match an account. Nothing tells an attacker which one was wrong.",["Re-enter your password. Passwords are case-sensitive.","Select \"Sign in\" to try again. After 5 incorrect attempts, the account is temporarily locked."]],"fr":"Guided · G-05 · Sign in · Email or password is incorrect","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":967},{"c":"G-06","k":"g-signin.last","id":"g-signin","t":"Sign in","n":"One attempt remaining","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["One attempt remains before the account is temporarily locked for 15 minutes.",["Select \"Reset your password instead\" to avoid the lock.","Or re-enter your password and select \"Sign in\"."]],"fr":"Guided · G-06 · Sign in · One attempt remaining","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":997},{"c":"G-07","k":"g-locked.default","id":"g-locked","t":"Account temporarily locked","n":"Temporarily locked: too many passwords","f":"1. A provider signs in","sec":"prov","p":"sign-in/locked","h":["The account is temporarily locked after too many incorrect passwords. It unlocks on its own after 15 minutes.",["Select \"Email me a password reset link\". Setting a new password unlocks the account right away.","Or select \"Back to sign in\" and try again after the time shown."]],"fr":"Guided · G-07 · Account temporarily locked · Temporarily locked: too many passwords","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-08","k":"g-signin.staff","id":"g-signin","t":"Sign in","n":"A CQH work address is entered","f":"1. A provider signs in","sec":"prov","p":"sign-in","h":["A CQH work address was entered. Staff never enter their work password here.",["Select \"Go to staff sign-in\" to continue on the staff page."]],"fr":"Guided · G-08 · Sign in · A CQH work address is entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1029},{"c":"G-09","k":"g-code.app","id":"g-code","t":"Verification code","n":"Authenticator code: Verify is disabled","f":"1. A provider signs in","sec":"prov","p":"sign-in/verify","h":["Two-step verification: the code from the authenticator app proves it's really you.",["Open the authenticator app on your phone and enter the 6-digit code shown for AtlasIQ.","Select \"Verify and sign in\". It's disabled until all 6 digits are entered.","Phone not at hand? Select \"Try another way\" to get a code by email or use a recovery code."]],"fr":"Guided · G-09 · Verification code · Authenticator code: Verify is disabled","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-10","k":"g-code.appfilled","id":"g-code","t":"Verification code","n":"Authenticator code entered","f":"1. A provider signs in","sec":"prov","p":"sign-in/verify","h":["Two-step verification: the code from the authenticator app proves it's really you.",["Open the authenticator app on your phone and enter the 6-digit code shown for AtlasIQ.","Select \"Verify and sign in\". It's disabled until all 6 digits are entered.","Phone not at hand? Select \"Try another way\" to get a code by email or use a recovery code."]],"fr":"Guided · G-10 · Verification code · Authenticator code entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-11","k":"g-code.appwrong","id":"g-code","t":"Verification code","n":"Authenticator code isn't correct","f":"1. A provider signs in","sec":"prov","p":"sign-in/verify","h":["Two-step verification: the code from the authenticator app proves it's really you.",["Open the authenticator app on your phone and enter the 6-digit code shown for AtlasIQ.","Select \"Verify and sign in\". It's disabled until all 6 digits are entered.","Phone not at hand? Select \"Try another way\" to get a code by email or use a recovery code."]],"fr":"Guided · G-11 · Verification code · Authenticator code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-12","k":"g-locked.codes","id":"g-locked","t":"Account temporarily locked","n":"Temporarily locked: too many codes","f":"1. A provider signs in","sec":"prov","p":"sign-in/locked","h":["The account is temporarily locked after too many incorrect verification codes.",["Wait for the time shown, then sign in again.","Lost access to your authenticator app? Contact CQH provider support using the details shown."]],"fr":"Guided · G-12 · Account temporarily locked · Temporarily locked: too many codes","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-13","k":"g-expired.default","id":"g-expired","t":"Password expired","n":"Password expired","f":"1. A provider signs in","sec":"prov","p":"sign-in/new-password","h":["Passwords must be changed every 90 days. Create a new one to continue.",["Enter a new password. The rules tick as each one is met.","Enter it again in \"Confirm new password\". A message shows whether they match.","Select \"Save new password and continue\". It's disabled until both are complete."]],"fr":"Guided · G-13 · Password expired · Password expired","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1061},{"c":"G-14","k":"g-expired.ready","id":"g-expired","t":"Password expired","n":"Password expired: new password ready","f":"1. A provider signs in","sec":"prov","p":"sign-in/new-password","h":["Passwords must be changed every 90 days. Create a new one to continue.",["Enter a new password. The rules tick as each one is met.","Enter it again in \"Confirm new password\". A message shows whether they match.","Select \"Save new password and continue\". It's disabled until both are complete."]],"fr":"Guided · G-14 · Password expired · Password expired: new password ready","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1063},{"c":"G-15","k":"g-suspended.default","id":"g-suspended","t":"Access suspended","n":"Agency access suspended","f":"1. A provider signs in","sec":"prov","p":"sign-in/suspended","h":["CQH has suspended this agency's access. The person can't sign in, and their records are kept.",["Contact CQH provider support using the details shown.","Select \"Back to sign in\" to leave."]],"fr":"Guided · G-15 · Access suspended · Agency access suspended","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-16","k":"g-closed.default","id":"g-closed","t":"Account closed","n":"Account closed","f":"1. A provider signs in","sec":"prov","p":"sign-in/closed","h":["This account was closed. The agency would need CQH's help to get access again.",["Contact CQH provider support using the details shown.","Select \"Back to sign in\" to leave."]],"fr":"Guided · G-16 · Account closed · Account closed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-17","k":"g-another.default","id":"g-another","t":"Try another way","n":"Choose another way to verify","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify/other-ways","h":["Choose a backup way to verify when the authenticator app isn't available.",["Select \"Email code\" to get a one-time code by email.","Or select \"Recovery code\" to use a code you saved during setup.","Select \"Authenticator app\" to go back to the app code."]],"fr":"Guided · G-17 · Try another way · Choose another way to verify","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-18","k":"g-code.email","id":"g-code","t":"Verification code","n":"Email code sent","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify","h":["A one-time code was sent by email, as a backup to the authenticator app.",["Open the email from AtlasIQ and type the 6-digit code.","Select \"Verify and sign in\".","No email? Select \"Send a new code\" once the countdown ends."]],"fr":"Guided · G-18 · Verification code · Email code sent","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-19","k":"g-code.emailwrong","id":"g-code","t":"Verification code","n":"Email code isn't correct","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify","h":["A one-time code was sent by email, as a backup to the authenticator app.",["Open the email from AtlasIQ and type the 6-digit code.","Select \"Verify and sign in\".","No email? Select \"Send a new code\" once the countdown ends."]],"fr":"Guided · G-19 · Verification code · Email code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-20","k":"g-code.emailexpired","id":"g-code","t":"Verification code","n":"Email code has expired","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify","h":["A one-time code was sent by email, as a backup to the authenticator app.",["Open the email from AtlasIQ and type the 6-digit code.","Select \"Verify and sign in\".","No email? Select \"Send a new code\" once the countdown ends."]],"fr":"Guided · G-20 · Verification code · Email code has expired","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-21","k":"g-recovery.default","id":"g-recovery","t":"Recovery code","n":"Recovery code: Verify is disabled","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify/recovery-code","h":["Use one of the 10 recovery codes saved during setup. Each code works once.",["Enter a code, such as 7KQ2-M9XD. The button stays disabled until all 8 characters are entered.","Select \"Verify and sign in\"."]],"fr":"Guided · G-21 · Recovery code · Recovery code: Verify is disabled","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-22","k":"g-recovery.wrong","id":"g-recovery","t":"Recovery code","n":"Recovery code isn't correct","f":"2. Try another way: email code or recovery code","sec":"prov","p":"sign-in/verify/recovery-code","h":["Use one of the 10 recovery codes saved during setup. Each code works once.",["Enter a code, such as 7KQ2-M9XD. The button stays disabled until all 8 characters are entered.","Select \"Verify and sign in\"."]],"fr":"Guided · G-22 · Recovery code · Recovery code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-23","k":"g-forgot.default","id":"g-forgot","t":"Reset your password","n":"Reset your password","f":"3. Forgot password","sec":"prov","p":"forgot-password","h":["Request a link to create a new password.",["Enter the email address linked to the account.","Select \"Send reset link\". A reset email is sent if the account exists.","CQH staff: select \"Reset your CQH work password\" instead."]],"fr":"Guided · G-23 · Reset your password · Reset your password","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-24","k":"g-forgot.error","id":"g-forgot","t":"Reset your password","n":"Email address isn't valid","f":"3. Forgot password","sec":"prov","p":"forgot-password","h":["Request a link to create a new password.",["Enter the email address linked to the account.","Select \"Send reset link\". A reset email is sent if the account exists.","CQH staff: select \"Reset your CQH work password\" instead."]],"fr":"Guided · G-24 · Reset your password · Email address isn't valid","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-25","k":"g-sent.default","id":"g-sent","t":"Check your email","n":"Check your email","f":"3. Forgot password","sec":"prov","p":"forgot-password/sent","h":["The reset link has been sent. For security, the page doesn't say whether the account exists.",["Open the reset email and select its \"Set a new password\" link.","Didn't get it? Select \"Resend the link\" once the countdown ends.","Select \"Use a different email address\" to correct it."]],"fr":"Guided · G-25 · Check your email · Check your email","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-26","k":"g-newpw.typing","id":"g-newpw","t":"Create a new password","n":"New password: rules ticking","f":"3. Forgot password","sec":"prov","p":"reset-password","h":["Create a new password from the reset link.",["Enter a new password that meets every rule.","Confirm it in the second field.","Select \"Save new password\". You'll then enter a code from your authenticator app."]],"fr":"Guided · G-26 · Create a new password · New password: rules ticking","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1043},{"c":"G-27","k":"g-newpw.mismatch","id":"g-newpw","t":"Create a new password","n":"New password: confirmation doesn't match","f":"3. Forgot password","sec":"prov","p":"reset-password","h":["Create a new password from the reset link.",["Enter a new password that meets every rule.","Confirm it in the second field.","Select \"Save new password\". You'll then enter a code from your authenticator app."]],"fr":"Guided · G-27 · Create a new password · New password: confirmation doesn't match","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1071},{"c":"G-28","k":"g-newpw.ready","id":"g-newpw","t":"Create a new password","n":"New password: ready to save","f":"3. Forgot password","sec":"prov","p":"reset-password","h":["Create a new password from the reset link.",["Enter a new password that meets every rule.","Confirm it in the second field.","Select \"Save new password\". You'll then enter a code from your authenticator app."]],"fr":"Guided · G-28 · Create a new password · New password: ready to save","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1045},{"c":"G-29","k":"g-code.reset","id":"g-code","t":"Verification code","n":"After a password reset","f":"3. Forgot password","sec":"prov","p":"sign-in/verify","h":["The password was just changed. Enter a code to finish signing in.",["Enter the 6-digit code from the authenticator app.","Select \"Verify and sign in\"."]],"fr":"Guided · G-29 · Verification code · After a password reset","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":917},{"c":"G-30","k":"g-linkexp.default","id":"g-linkexp","t":"Reset link expired","n":"Reset link expired","f":"3. Forgot password","sec":"prov","p":"reset-password/expired","h":["The reset link was opened after it expired, or it was already used.",["Select \"Send a new link\" and use it within 30 minutes."]],"fr":"Guided · G-30 · Reset link expired · Reset link expired","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-31","k":"g-r1.empty","id":"g-r1","t":"1 · Your agency","n":"Step 1 · Your agency: nothing entered","f":"4. A new agency registers","sec":"prov","p":"register/agency","h":["Registration, step 1 of 6: identify the agency so CQH can match it to its enrollment record.",["Fill in the required fields marked *. Hover over or tab to the info icons for help with NPI and tax ID.","If Stella suggests the enrolled name, select \"Use the enrolled name\" or \"Keep my entry\".","Enter the agency's phone number. Fax is optional.","Select \"Continue\". It's disabled until the required fields are complete."]],"fr":"Guided · G-31 · 1 · Your agency · Step 1 · Your agency: nothing entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":983},{"c":"G-32","k":"g-r1.default","id":"g-r1","t":"1 · Your agency","n":"Step 1 · Details entered, with Stella's suggestion","f":"4. A new agency registers","sec":"prov","p":"register/agency","h":["Registration, step 1 of 6: identify the agency so CQH can match it to its enrollment record.",["Fill in the required fields marked *. Hover over or tab to the info icons for help with NPI and tax ID.","If Stella suggests the enrolled name, select \"Use the enrolled name\" or \"Keep my entry\".","Enter the agency's phone number. Fax is optional.","Select \"Continue\". It's disabled until the required fields are complete."]],"fr":"Guided · G-32 · 1 · Your agency · Step 1 · Details entered, with Stella's suggestion","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1179},{"c":"G-33","k":"g-r1.tip","id":"g-r1","t":"1 · Your agency","n":"Step 1 · A tooltip open","f":"4. A new agency registers","sec":"prov","p":"register/agency","h":["Registration, step 1 of 6: identify the agency so CQH can match it to its enrollment record.",["Fill in the required fields marked *. Hover over or tab to the info icons for help with NPI and tax ID.","If Stella suggests the enrolled name, select \"Use the enrolled name\" or \"Keep my entry\".","Enter the agency's phone number. Fax is optional.","Select \"Continue\". It's disabled until the required fields are complete."]],"fr":"Guided · G-33 · 1 · Your agency · Step 1 · A tooltip open","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":957},{"c":"G-34","k":"g-r1.nomatch","id":"g-r1","t":"1 · Your agency","n":"Step 1 · No enrollment match","f":"4. A new agency registers","sec":"prov","p":"register/agency","h":["The NPI and tax ID don't match an enrollment record.",["Check the tax ID and NPI.","Select \"Continue\" again, or \"Contact support\" if the details are correct."]],"fr":"Guided · G-34 · 1 · Your agency · Step 1 · No enrollment match","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1117},{"c":"G-35","k":"g-r1.taken","id":"g-r1","t":"1 · Your agency","n":"Step 1 · Agency already registered","f":"4. A new agency registers","sec":"prov","p":"register/agency","h":["This agency already has an AtlasIQ account.",["Select \"Sign in\" if the account is yours, or ask a colleague to add you."]],"fr":"Guided · G-35 · 1 · Your agency · Step 1 · Agency already registered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1117},{"c":"G-36","k":"g-r2.empty","id":"g-r2","t":"2 · About you","n":"Step 2 · About you: nothing entered","f":"4. A new agency registers","sec":"prov","p":"register/about-you","h":["Step 2 of 6: the person registering. The work email address is used to sign in.",["Fill in each required field.","Enter a phone number: cell phone or landline.","Tick the box if you're an owner or senior executive.","Select \"Continue\". A code is emailed to you."]],"fr":"Guided · G-36 · 2 · About you · Step 2 · About you: nothing entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":951},{"c":"G-37","k":"g-r2.default","id":"g-r2","t":"2 · About you","n":"Step 2 · Details entered","f":"4. A new agency registers","sec":"prov","p":"register/about-you","h":["Step 2 of 6: the person registering. The work email address is used to sign in.",["Fill in each required field.","Enter a phone number: cell phone or landline.","Tick the box if you're an owner or senior executive.","Select \"Continue\". A code is emailed to you."]],"fr":"Guided · G-37 · 2 · About you · Step 2 · Details entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":925},{"c":"G-38","k":"g-r2.errors","id":"g-r2","t":"2 · About you","n":"Step 2 · Details need fixing","f":"4. A new agency registers","sec":"prov","p":"register/about-you","h":["Step 2 of 6: the person registering. The work email address is used to sign in.",["Fill in each required field.","Enter a phone number: cell phone or landline.","Tick the box if you're an owner or senior executive.","Select \"Continue\". A code is emailed to you."]],"fr":"Guided · G-38 · 2 · About you · Step 2 · Details need fixing","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1021},{"c":"G-39","k":"g-r3.default","id":"g-r3","t":"3 · Verify your email","n":"Step 3 · Verify your email","f":"4. A new agency registers","sec":"prov","p":"register/verify-email","h":["Step 3 of 6: confirm the email address belongs to you.",["Enter the 6-digit code from the email AtlasIQ sent.","Select \"Verify email address\".","Wrong address? Select \"Change email address\"."]],"fr":"Guided · G-39 · 3 · Verify your email · Step 3 · Verify your email","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-40","k":"g-r3.wrong","id":"g-r3","t":"3 · Verify your email","n":"Step 3 · Code isn't correct","f":"4. A new agency registers","sec":"prov","p":"register/verify-email","h":["Step 3 of 6: confirm the email address belongs to you.",["Enter the 6-digit code from the email AtlasIQ sent.","Select \"Verify email address\".","Wrong address? Select \"Change email address\"."]],"fr":"Guided · G-40 · 3 · Verify your email · Step 3 · Code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-41","k":"g-r3.expired","id":"g-r3","t":"3 · Verify your email","n":"Step 3 · Code has expired","f":"4. A new agency registers","sec":"prov","p":"register/verify-email","h":["Step 3 of 6: confirm the email address belongs to you.",["Enter the 6-digit code from the email AtlasIQ sent.","Select \"Verify email address\".","Wrong address? Select \"Change email address\"."]],"fr":"Guided · G-41 · 3 · Verify your email · Step 3 · Code has expired","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-42","k":"g-r4.typing","id":"g-r4","t":"4 · Create a password","n":"Step 4 · Create a password: rules ticking","f":"4. A new agency registers","sec":"prov","p":"register/password","h":["Step 4 of 6: create the password.",["Enter a password. The rules tick as each one is met.","Enter it again to confirm.","Select \"Continue\" when both match and every rule is met."]],"fr":"Guided · G-42 · 4 · Create a password · Step 4 · Create a password: rules ticking","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":903},{"c":"G-43","k":"g-r4.mismatch","id":"g-r4","t":"4 · Create a password","n":"Step 4 · Confirmation doesn't match","f":"4. A new agency registers","sec":"prov","p":"register/password","h":["Step 4 of 6: create the password.",["Enter a password. The rules tick as each one is met.","Enter it again to confirm.","Select \"Continue\" when both match and every rule is met."]],"fr":"Guided · G-43 · 4 · Create a password · Step 4 · Confirmation doesn't match","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":931},{"c":"G-44","k":"g-r4.done","id":"g-r4","t":"4 · Create a password","n":"Step 4 · Every rule met and confirmed","f":"4. A new agency registers","sec":"prov","p":"register/password","h":["Step 4 of 6: create the password.",["Enter a password. The rules tick as each one is met.","Enter it again to confirm.","Select \"Continue\" when both match and every rule is met."]],"fr":"Guided · G-44 · 4 · Create a password · Step 4 · Every rule met and confirmed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":905},{"c":"G-45","k":"g-r5.default","id":"g-r5","t":"5 · Two-step verification","n":"Step 5 · Set up the authenticator app","f":"4. A new agency registers","sec":"prov","p":"register/second-step","h":["Step 5 of 6: set up two-step verification with an authenticator app.",["Scan the QR code with an authenticator app, or copy the setup key.","Enter the 6-digit code the app shows.","Select \"Verify and continue\"."]],"fr":"Guided · G-45 · 5 · Two-step verification · Step 5 · Set up the authenticator app","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1137},{"c":"G-46","k":"g-r5.wrong","id":"g-r5","t":"5 · Two-step verification","n":"Step 5 · App code isn't correct","f":"4. A new agency registers","sec":"prov","p":"register/second-step","h":["Step 5 of 6: set up two-step verification with an authenticator app.",["Scan the QR code with an authenticator app, or copy the setup key.","Enter the 6-digit code the app shows.","Select \"Verify and continue\"."]],"fr":"Guided · G-46 · 5 · Two-step verification · Step 5 · App code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1133},{"c":"G-47","k":"g-r5c.default","id":"g-r5c","t":"5 · Recovery codes","n":"Step 5 · Save recovery codes","f":"4. A new agency registers","sec":"prov","p":"register/recovery-codes","h":["Step 5 of 6: save the recovery codes. Each one signs you in once if you can't use your app.",["Copy, download or print the codes.","Tick \"I've saved my recovery codes in a safe place\".","Select \"Continue\"."]],"fr":"Guided · G-47 · 5 · Recovery codes · Step 5 · Save recovery codes","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":955},{"c":"G-48","k":"g-r5c.checked","id":"g-r5c","t":"5 · Recovery codes","n":"Step 5 · Recovery codes saved","f":"4. A new agency registers","sec":"prov","p":"register/recovery-codes","h":["Step 5 of 6: save the recovery codes. Each one signs you in once if you can't use your app.",["Copy, download or print the codes.","Tick \"I've saved my recovery codes in a safe place\".","Select \"Continue\"."]],"fr":"Guided · G-48 · 5 · Recovery codes · Step 5 · Recovery codes saved","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":929},{"c":"G-49","k":"g-r6.empty","id":"g-r6","t":"6 · Authorized representatives","n":"Step 6 · No representative yet","f":"4. A new agency registers","sec":"prov","p":"register/representatives","h":["Step 6 of 6: name the authorized representatives CQH may discuss the review with.",["Select \"Add a representative\".","Tick the statement that each person is an owner or senior executive.","Select \"Submit registration\". It's disabled until at least one person is named and the statement is ticked."]],"fr":"Guided · G-49 · 6 · Authorized representatives · Step 6 · No representative yet","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-50","k":"g-r6.adding","id":"g-r6","t":"6 · Authorized representatives","n":"Step 6 · Adding a representative","f":"4. A new agency registers","sec":"prov","p":"register/representatives","h":["Add a representative's details and proof of role.",["Fill in the required fields. Fax and profile link are optional.","Add proof of role with \"Choose file\" (shown as \"Replace file\" once a file is chosen). Stella checks that it's readable.","Select \"Add representative\"."]],"fr":"Guided · G-50 · 6 · Authorized representatives · Step 6 · Adding a representative","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1763},{"c":"G-51","k":"g-r6.adderr","id":"g-r6","t":"6 · Authorized representatives","n":"Step 6 · Representative details need fixing","f":"4. A new agency registers","sec":"prov","p":"register/representatives","h":["Add a representative's details and proof of role.",["Fill in the required fields. Fax and profile link are optional.","Add proof of role with \"Choose file\" (shown as \"Replace file\" once a file is chosen). Stella checks that it's readable.","Select \"Add representative\"."]],"fr":"Guided · G-51 · 6 · Authorized representatives · Step 6 · Representative details need fixing","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1811},{"c":"G-52","k":"g-r6.one","id":"g-r6","t":"6 · Authorized representatives","n":"Step 6 · One representative, not yet confirmed","f":"4. A new agency registers","sec":"prov","p":"register/representatives","h":["Step 6 of 6: name the authorized representatives CQH may discuss the review with.",["Select \"Add another representative\" to name a second person (up to 2).","Tick the statement that each person is an owner or senior executive.","Select \"Submit registration\". It's disabled until at least one person is named and the statement is ticked."]],"fr":"Guided · G-52 · 6 · Authorized representatives · Step 6 · One representative, not yet confirmed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":911},{"c":"G-53","k":"g-r6.full","id":"g-r6","t":"6 · Authorized representatives","n":"Step 6 · Both representatives named","f":"4. A new agency registers","sec":"prov","p":"register/representatives","h":["Both representatives are named, which is the most the contract allows.",["Check each representative's details. Select \"Remove\" to change one.","Tick the statement that each person is an owner or senior executive.","Select \"Submit registration\"."]],"fr":"Guided · G-53 · 6 · Authorized representatives · Step 6 · Both representatives named","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1163},{"c":"G-54","k":"g-r7.default","id":"g-r7","t":"Registration submitted","n":"Registration submitted","f":"4. A new agency registers","sec":"prov","p":"register/sent","h":["The registration is submitted. CQH now verifies the representative.",["Read the 3 verification steps: step 2 is in review.","Select \"Go to your home page\"."]],"fr":"Guided · G-54 · Registration submitted · Registration submitted","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":923},{"c":"G-55","k":"g-home.review","id":"g-home","t":"Home while CQH verifies","n":"Home: representative in review","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/home","h":["Home while CQH reviews the representative. One status explains where things stand.",["Read the status at the top: step 2 of 3 is in review, and there's nothing to do.","Locked items in the menu open after step 2. Select \"Claim status\" to see the locked page.","CQH staff decide in Verify authorized representatives (C-24 to C-26): verified opens G-63, not accepted opens G-58."]],"fr":"Guided · G-55 · Home while CQH verifies · Home: representative in review","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-56","k":"g-larea.claims","id":"g-larea","t":"Locked until verified","n":"Claim status, locked","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/locked","h":["A locked area: it opens after CQH verifies the representative.",["Select \"See verification status\" to return home."]],"fr":"Guided · G-56 · Locked until verified · Claim status, locked","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-57","k":"g-larea.chat","id":"g-larea","t":"Locked until verified","n":"Chat assistant, locked","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/locked","h":["A locked area: it opens after CQH verifies the representative.",["Select \"See verification status\" to return home."]],"fr":"Guided · G-57 · Locked until verified · Chat assistant, locked","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-58","k":"g-home.action","id":"g-home","t":"Home while CQH verifies","n":"Home: action needed","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/home","h":["CQH couldn't verify the representative. The status says what to send.",["Read CQH's message and Stella's suggestion.","Select \"Send new proof of role\"."]],"fr":"Guided · G-58 · Home while CQH verifies · Home: action needed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1213},{"c":"G-59","k":"g-reps.action","id":"g-reps","t":"Representatives","n":"Representatives: action needed","f":"5. While CQH verifies the representative","sec":"prov","p":null,"h":["CQH declined the proof of role. Send a new document.",["Read CQH's message.","Select \"Send new proof of role\"."]],"fr":"Guided · G-59 · Representatives · Representatives: action needed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-60","k":"g-reps.upload","id":"g-reps","t":"Representatives","n":"Representatives: send new proof of role","f":"5. While CQH verifies the representative","sec":"prov","p":null,"h":["Send a new proof of role for CQH to check.",["Choose the file (\"Replace file\" once one is chosen). Stella checks that it's readable.","Select \"Send to CQH\". It's disabled until a file is chosen."]],"fr":"Guided · G-60 · Representatives · Representatives: send new proof of role","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1143},{"c":"G-61","k":"g-home.resent","id":"g-home","t":"Home while CQH verifies","n":"Home: new proof in review","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/home","h":["New proof of role was sent. Step 2 is in review again.",["Read the status: there's nothing to do while CQH reviews it.","CQH staff decide again in C-24 to C-26."]],"fr":"Guided · G-61 · Home while CQH verifies · Home: new proof in review","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-62","k":"g-reps.resent","id":"g-reps","t":"Representatives","n":"Representatives: new proof in review","f":"5. While CQH verifies the representative","sec":"prov","p":null,"h":["The new proof of role is in review.",["The history shows each step, newest first."]],"fr":"Guided · G-62 · Representatives · Representatives: new proof in review","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-63","k":"g-home.verified","id":"g-home","t":"Home while CQH verifies","n":"Home: fully verified","f":"5. While CQH verifies the representative","sec":"prov","p":"provider/home","h":["The agency is fully verified, and everything is unlocked.",["Select \"Go to Claim status\" to start working."]],"fr":"Guided · G-63 · Home while CQH verifies · Home: fully verified","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-64","k":"g-reps.verified","id":"g-reps","t":"Representatives","n":"Representatives: verified","f":"5. While CQH verifies the representative","sec":"prov","p":null,"h":["Maya Patel is verified as an authorized representative.",["Select \"Add a representative\" to name a second person (up to 2)."]],"fr":"Guided · G-64 · Representatives · Representatives: verified","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-65","k":"g-timeout.default","id":"g-timeout","t":"Session about to end","n":"Session about to end","f":"6. Session","sec":"prov","p":"provider/home","h":["The session is about to end because there hasn't been any activity.",["Select \"Stay signed in\" to keep working.","Or select \"Sign out now\"."]],"fr":"Guided · G-65 · Session about to end · Session about to end","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":3357},{"c":"G-66","k":"g-out.timeout","id":"g-out","t":"Signed out","n":"Signed out after inactivity","f":"6. Session","sec":"prov","p":"signed-out","h":["The person is signed out.",["Select \"Sign in again\"."]],"fr":"Guided · G-66 · Signed out · Signed out after inactivity","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-67","k":"g-out.manual","id":"g-out","t":"Signed out","n":"Signed out","f":"6. Session","sec":"prov","p":"signed-out","h":["The person is signed out.",["Select \"Sign in again\"."]],"fr":"Guided · G-67 · Signed out · Signed out","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"G-68","k":"g-invite.empty","id":"g-invite","t":"Accept an invitation","n":"Step 1 · Create your account: nothing entered","f":"7. A customer or partner is invited","sec":"cust","p":"invitation","h":["Invitation, step 1 of 3: create the account. The email address is fixed by the invitation.",["Enter your full name.","Create a password and confirm it.","Select \"Create account\"."]],"fr":"Guided · G-68 · Accept an invitation · Step 1 · Create your account: nothing entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1343},{"c":"G-69","k":"g-invite.default","id":"g-invite","t":"Accept an invitation","n":"Step 1 · Ready to create the account","f":"7. A customer or partner is invited","sec":"cust","p":"invitation","h":["Invitation, step 1 of 3: create the account. The email address is fixed by the invitation.",["Enter your full name.","Create a password and confirm it.","Select \"Create account\"."]],"fr":"Guided · G-69 · Accept an invitation · Step 1 · Ready to create the account","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1327},{"c":"G-70","k":"g-imfa.default","id":"g-imfa","t":"Set up two-step verification","n":"Step 2 · Set up the authenticator app","f":"7. A customer or partner is invited","sec":"cust","p":"invitation/second-step","h":["Invitation, step 2 of 3: set up the authenticator app.",["Scan the QR code, or copy the setup key.","Enter the 6-digit code from the app.","Select \"Verify and continue\"."]],"fr":"Guided · G-70 · Set up two-step verification · Step 2 · Set up the authenticator app","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1169},{"c":"G-71","k":"g-imfa.wrong","id":"g-imfa","t":"Set up two-step verification","n":"Step 2 · App code isn't correct","f":"7. A customer or partner is invited","sec":"cust","p":"invitation/second-step","h":["Invitation, step 2 of 3: set up the authenticator app.",["Scan the QR code, or copy the setup key.","Enter the 6-digit code from the app.","Select \"Verify and continue\"."]],"fr":"Guided · G-71 · Set up two-step verification · Step 2 · App code isn't correct","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1165},{"c":"G-72","k":"g-icodes.default","id":"g-icodes","t":"Save your recovery codes","n":"Step 3 · Save recovery codes","f":"7. A customer or partner is invited","sec":"cust","p":"invitation/recovery-codes","h":["Invitation, step 3 of 3: save the recovery codes.",["Copy, download or print them.","Tick the box, then select \"Finish and open AtlasIQ\"."]],"fr":"Guided · G-72 · Save your recovery codes · Step 3 · Save recovery codes","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1099},{"c":"G-73","k":"g-icodes.checked","id":"g-icodes","t":"Save your recovery codes","n":"Step 3 · Recovery codes saved","f":"7. A customer or partner is invited","sec":"cust","p":"invitation/recovery-codes","h":["Invitation, step 3 of 3: save the recovery codes.",["Copy, download or print them.","Tick the box, then select \"Finish and open AtlasIQ\"."]],"fr":"Guided · G-73 · Save your recovery codes · Step 3 · Recovery codes saved","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1073},{"c":"G-74","k":"g-invexp.default","id":"g-invexp","t":"Invitation expired","n":"Invitation expired","f":"7. A customer or partner is invited","sec":"cust","p":"invitation/expired","h":["The invitation expired after 7 days.",["Select \"Request a new invitation\". CQH is asked to send a new one."]],"fr":"Guided · G-74 · Invitation expired · Invitation expired","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-01","k":"d-signin.empty","id":"d-signin","t":"Staff sign-in","n":"Ready to sign in: Continue is disabled","f":"8. CQH staff sign in","sec":"staff","p":"staff","h":["The staff sign-in page. Staff sign in with their CQH account, never an AtlasIQ password.",["Enter your CQH work email address. Continue stays disabled until you do.","Select \"Continue with CQH account\". You'll go to CQH's own sign-in page.","Forgot your work password? Select \"Reset it with CQH self-service password reset\"."]],"fr":"Copilot · C-01 · Staff sign-in · Ready to sign in: Continue is disabled","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-02","k":"d-signin.filled","id":"d-signin","t":"Staff sign-in","n":"Work email entered","f":"8. CQH staff sign in","sec":"staff","p":"staff","h":["The staff sign-in page. Staff sign in with their CQH account, never an AtlasIQ password.",["Enter your CQH work email address. Continue stays disabled until you do.","Select \"Continue with CQH account\". You'll go to CQH's own sign-in page.","Forgot your work password? Select \"Reset it with CQH self-service password reset\"."]],"fr":"Copilot · C-02 · Staff sign-in · Work email entered","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-03","k":"d-signin.notstaff","id":"d-signin","t":"Staff sign-in","n":"Not a CQH address","f":"8. CQH staff sign in","sec":"staff","p":"staff","h":["A non-CQH address was entered on the staff page.",["Select \"Go to provider and customer sign-in\"."]],"fr":"Copilot · C-03 · Staff sign-in · Not a CQH address","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-04","k":"d-idp.default","id":"d-idp","t":"CQH sign-in (outside AtlasIQ)","n":"CQH sign-in (outside AtlasIQ)","f":"8. CQH staff sign in","sec":"staff","p":"login.microsoftonline.com","h":["A placeholder for CQH's own sign-in page, which isn't part of AtlasIQ.",["Select \"Continue as if signed in at CQH\" to come back signed in.","Or select \"Cancel at CQH\" to see what happens when sign-in isn't completed."]],"fr":"Copilot · C-04 · CQH sign-in (outside AtlasIQ) · CQH sign-in (outside AtlasIQ)","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-05","k":"d-program.default","id":"d-program","t":"Choose where to work","n":"More than one program: choose where to work","f":"8. CQH staff sign in","sec":"staff","p":"staff/choose-program","h":["Staff in more than one program choose where to work. Stella preselects the one that needs attention.",["Choose a program.","Tick \"Open this program automatically next time\" to skip this page.","Select \"Open workspace\"."]],"fr":"Copilot · C-05 · Choose where to work · More than one program: choose where to work","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-06","k":"d-program.one","id":"d-program","t":"Choose where to work","n":"One program: opens it straight away","f":"8. CQH staff sign in","sec":"staff","p":"staff/choose-program","h":["Staff in one program skip the choice. AtlasIQ opens the workspace straight away.",["Wait a moment: the workspace opens on its own."]],"fr":"Copilot · C-06 · Choose where to work · One program: opens it straight away","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-07","k":"d-program.none","id":"d-program","t":"Choose where to work","n":"No program yet","f":"8. CQH staff sign in","sec":"staff","p":"staff/choose-program","h":["The person is signed in but has no program, so there's no workspace to open.",["Select \"Email Priya Shah\" to ask to be added to a program.","Or select \"Sign out\"."]],"fr":"Copilot · C-07 · Choose where to work · No program yet","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-08","k":"d-ssoerr.noaccess","id":"d-ssoerr","t":"Sign-in problem","n":"Not set up in AtlasIQ yet","f":"8. CQH staff sign in","sec":"staff","p":"staff/sign-in-problem","h":["Signed in at CQH, but there's a problem with AtlasIQ access.",["Read what happened and who can help.","Select \"Back to staff sign-in\" to leave."]],"fr":"Copilot · C-08 · Sign-in problem · Not set up in AtlasIQ yet","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-09","k":"d-ssoerr.ended","id":"d-ssoerr","t":"Sign-in problem","n":"Access has ended","f":"8. CQH staff sign in","sec":"staff","p":"staff/sign-in-problem","h":["Signed in at CQH, but there's a problem with AtlasIQ access.",["Read what happened and who can help.","Select \"Back to staff sign-in\" to leave."]],"fr":"Copilot · C-09 · Sign-in problem · Access has ended","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-10","k":"d-ssoerr.canceled","id":"d-ssoerr","t":"Sign-in problem","n":"Sign-in wasn't completed","f":"8. CQH staff sign in","sec":"staff","p":"staff/sign-in-problem","h":["Signed in at CQH, but there's a problem with AtlasIQ access.",["Read what happened and who can help.","Select \"Back to staff sign-in\" to leave."]],"fr":"Copilot · C-10 · Sign-in problem · Sign-in wasn't completed","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-11","k":"d-timeout.default","id":"d-timeout","t":"Session about to end","n":"Session about to end","f":"9. Session","sec":"staff","p":"reviewer/home","h":["The staff session is about to end.",["Select \"Stay signed in\" to keep working."]],"fr":"Copilot · C-11 · Session about to end · Session about to end","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":2127},{"c":"C-12","k":"d-out.timeout","id":"d-out","t":"Signed out","n":"Signed out after inactivity","f":"9. Session","sec":"staff","p":"staff/signed-out","h":["The staff member is signed out of AtlasIQ.",["Select \"Sign in again\"."]],"fr":"Copilot · C-12 · Signed out · Signed out after inactivity","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-13","k":"d-out.manual","id":"d-out","t":"Signed out","n":"Signed out","f":"9. Session","sec":"staff","p":"staff/signed-out","h":["The staff member is signed out of AtlasIQ.",["Select \"Sign in again\"."]],"fr":"Copilot · C-13 · Signed out · Signed out","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":900},{"c":"C-14","k":"d-staff.default","id":"d-staff","t":"Staff accounts","n":"Staff accounts","f":"10. Staff accounts","sec":"admin","p":"admin/staff-accounts","h":["Staff accounts: every CQH person with AtlasIQ access.",["Read Stella's briefing about accounts that need attention.","Select \"Add a staff user\".","Select the actions button on Sam Reed's row to deactivate an account."]],"fr":"Copilot · C-14 · Staff accounts · Staff accounts","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-15","k":"d-adduser.default","id":"d-adduser","t":"Add a staff user","n":"Add a staff user","f":"10. Staff accounts","sec":"admin","p":"admin/staff-accounts/add","h":["Give a colleague access by role, customer, program and function.",["Fill in the required fields marked *. Hover over the info icons for help.","Choose what they can do.","Select \"Add user\"."]],"fr":"Copilot · C-15 · Add a staff user · Add a staff user","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-16","k":"d-adduser.escalate","id":"d-adduser","t":"Add a staff user","n":"Supervisor: superuser-only options turned off","f":"10. Staff accounts","sec":"admin","p":"admin/staff-accounts/add","h":["A supervisor adds a colleague. Options only a superuser can give are turned off, with the reason shown.",["Fill in the required fields marked *. Hover over the info icons for help.","The Superuser role and Export are disabled: \"Only a superuser can give this role.\" / \"Only a superuser can allow Export.\"","To give them, ask a superuser (the banner names one).","Select \"Add user\"."]],"fr":"Copilot · C-16 · Add a staff user · Supervisor: superuser-only options turned off","pg":"AtlasIQ · C-16 Supervisor access (Nov 21)","w":1440,"ht":1268},{"c":"C-17","k":"d-user.staffoff","id":"d-user","t":"A person's account","n":"Deactivate a staff account","f":"10. Staff accounts","sec":"admin","p":"admin/accounts/person","h":["Deactivate a staff account and decide what happens to their work.",["Choose where Sam's 3 reviews go.","Select \"Deactivate Sam\"."]],"fr":"Copilot · C-17 · A person's account · Deactivate a staff account","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-18","k":"d-pacc.default","id":"d-pacc","t":"Provider access","n":"Provider access","f":"11. Provider access","sec":"admin","p":"admin/provider-access","h":["Provider access: suspend, restore or close an agency, and verify representatives.",["Select \"Review representative\" to verify Maya Patel.","Use a row's actions button to suspend or close an agency.","Select \"Restore\" on BrightPath Home Health."]],"fr":"Copilot · C-18 · Provider access · Provider access","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-19","k":"d-pacc.suspend","id":"d-pacc","t":"Provider access","n":"Suspend an agency","f":"11. Provider access","sec":"admin","p":"admin/provider-access","h":["Suspend an agency. Its people are signed out, and their records are kept.",["Read Stella's check of open work.","Select \"Suspend access\"."]],"fr":"Copilot · C-19 · Provider access · Suspend an agency","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-20","k":"d-pacc.restore","id":"d-pacc","t":"Provider access","n":"Restore an agency","f":"11. Provider access","sec":"admin","p":"admin/provider-access","h":["Restore an agency's access.",["Select \"Restore access\"."]],"fr":"Copilot · C-20 · Provider access · Restore an agency","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-21","k":"d-pacc.close","id":"d-pacc","t":"Provider access","n":"Close an agency","f":"11. Provider access","sec":"admin","p":"admin/provider-access","h":["Close an agency for good.",["Tick \"I understand this can't be undone\".","Select \"Close access\"."]],"fr":"Copilot · C-21 · Provider access · Close an agency","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-22","k":"d-user.locked","id":"d-user","t":"A person's account","n":"A locked provider account","f":"11. Provider access","sec":"admin","p":"admin/accounts/person","h":["A provider's account: why it's locked, sign-in security and history.",["Read Stella's explanation of the lockout.","Select \"Unlock account\"."]],"fr":"Copilot · C-22 · A person's account · A locked provider account","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-23","k":"d-user.unlock","id":"d-user","t":"A person's account","n":"Unlock the account","f":"11. Provider access","sec":"admin","p":"admin/accounts/person","h":["Confirm the unlock.",["Keep \"Also email her a password reset link\" ticked if needed.","Select \"Unlock account\"."]],"fr":"Copilot · C-23 · A person's account · Unlock the account","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-24","k":"d-verify.review","id":"d-verify","t":"Verify authorized representatives","n":"Verify a representative","f":"11. Provider access","sec":"admin","p":"providers/riverbend/representatives","h":["Verify an authorized representative. Stella's checks are suggestions; a person decides.",["Read \"What Stella checked\".","Phone and fax are partly hidden. Select \"Show\" to see them; this is recorded.","Choose \"Verify Maya Patel\" and select \"Verify representative\", or choose \"Don't accept\"."]],"fr":"Copilot · C-24 · Verify authorized representatives · Verify a representative","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1118},{"c":"C-25","k":"d-verify.reject","id":"d-verify","t":"Verify authorized representatives","n":"Don't accept, with a reason","f":"11. Provider access","sec":"admin","p":"providers/riverbend/representatives","h":["Decline with a reason. The agency sees the message and can send new proof.",["Choose a reason and write the message.","Select \"Send decision\"."]],"fr":"Copilot · C-25 · Verify authorized representatives · Don't accept, with a reason","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1304},{"c":"C-26","k":"d-verify.verified","id":"d-verify","t":"Verify authorized representatives","n":"Representative verified","f":"11. Provider access","sec":"admin","p":"providers/riverbend/representatives","h":["The representative is verified. The agency now has full access.",["The history shows who verified and when."]],"fr":"Copilot · C-26 · Verify authorized representatives · Representative verified","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1118},{"c":"C-27","k":"d-cp.default","id":"d-cp","t":"Customers and partners","n":"Customers and partners","f":"12. Customers and partners","sec":"admin","p":"admin/customers-and-partners","h":["Customers and partners: people outside CQH who see released work.",["Select \"Invite someone\"."]],"fr":"Copilot · C-27 · Customers and partners · Customers and partners","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-28","k":"d-invite.default","id":"d-invite","t":"Invite a customer or partner","n":"Invite a customer or partner","f":"12. Customers and partners","sec":"admin","p":"admin/customers-and-partners/invite","h":["Invite a customer or partner. The link works for 7 days.",["Fill in the required fields.","Select \"Send invitation\"."]],"fr":"Copilot · C-28 · Invite a customer or partner · Invite a customer or partner","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-29","k":"d-cp.sent","id":"d-cp","t":"Customers and partners","n":"Invitation sent","f":"12. Customers and partners","sec":"admin","p":"admin/customers-and-partners","h":["Customers and partners: people outside CQH who see released work.",["Select \"Invite someone\"."]],"fr":"Copilot · C-29 · Customers and partners · Invitation sent","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390},{"c":"C-30","k":"d-rules.default","id":"d-rules","t":"Sign-in rules","n":"Sign-in rules","f":"13. Sign-in rules","sec":"admin","p":"admin/sign-in-rules","h":["The sign-in rules for people who use an AtlasIQ password.",["Read Stella's suggestion about scheduled password changes.","Change a value, then select \"Save changes\"."]],"fr":"Copilot · C-30 · Sign-in rules · Sign-in rules","pg":"AtlasIQ · Sign-in and access v8 (Nov 20)","w":1440,"ht":1390}];
+const SRS = {"3.1.1":{"t":"Sign-in and credential handling","x":"All users sign in at the same place. Internal users sign in through the organisation's identity provider and complete MFA. Providers sign in with provider credentials held in the platform and also complete a second factor. The credential decides which workspace opens.","a":"Internal User; Provider","src":"PRO-036, CAS-009, CAS-029, NFR-002, NFR-004"},"3.1.2":{"t":"Password and account recovery","x":"Users can reset passwords, recover access and handle lockouts, while administrators enforce password rules (including complexity and how often passwords must change), unlock accounts and reset them when required.","a":"Internal User; Supervisor; Superuser","src":"CAS-033"},"3.1.3":{"t":"Internal user access setup","x":"Supervisors or superusers create workforce accounts and assign access by role, customer, programme, function and allowed actions such as view, upload or download. Provider accounts are self-registered, but supervisors and superusers can suspend, restore or close a provider's access.","a":"Superuser; Supervisor","src":"DOC-003, PRO-074, CAS-115, CAS-121, NFR-003"},"3.1.4":{"t":"Provider self-registration and restricted access","x":"Providers register themselves in the same application, verify their identity, and can recover their own access. Once signed in they land in the provider workspace and see only their own information. Anonymous or unverified users get only limited functions.","a":"Provider","src":"PRO-072, NFR-005"},"3.1.5":{"t":"Authorised-agent verification","x":"Enforcement only: protected provider screens and chatbot functions stay blocked until the provider's authorised-agent record is verified. The agent record, limits and history are set up under Provider – Verify authorised representatives.","a":"Authorized Agent","src":"PRO-014, CAS-175"},"3.1.6":{"t":"Login and activity audit","x":"The platform records login status with dates and times, and every important access, change, decision, assignment and export with the responsible user, timestamp and source IP address.","a":"System","src":"DOC-047, PRO-066, CAS-129, CAS-248, CAS-252, NFR-006"},"3.1.7":{"t":"Security and compliance baseline","x":"All platform data, files, backups and logs are encrypted and handled under HIPAA-compliant security controls. The source requirements also call for SOC 2 and HITRUST; whether formal certification or alignment is required is to be confirmed (Decision D-04, Q-011).","a":"System","src":"PRO-065, NFR-001, NFR-007, NFR-008"},"3.1.9":{"t":"Customer and external-partner access","x":"Customer users (for example state programme staff) and authorised external partners (for example the Attorney General's office, licensure boards and Medicaid Investigations Division units) are given accounts by a superuser or supervisor, complete MFA and can reach only the dashboards, reports, correspondence and case information released to them for their own programme. Access limits distinguish viewing, downloading and uploading, and every access is logged. Whether these users sign in through their own organisation's identity provider or with platform-held credentials is to be confirmed (Q-010).","a":"Superuser; Supervisor; Customer; External Partner","src":"CAS-060 to CAS-062, CAS-276, NFR-002, NFR-003"},"3.2.1":{"t":"Role-based home workspace","x":"After login, each user lands on a role-based home page (\"Pod Central\") showing work in progress, work available to pull from the main queue, anticipated due dates, letters to be sent, alerts, messages, announcements, updates on system changes and resource links; supervisors and managers also see graphs and management summaries, and superusers can maintain home-page content.","a":"Internal User; Supervisor; Superuser","src":"CAS-019, CAS-021, CAS-041"},"3.2.4":{"t":"Help and reference resources","x":"Every area provides help prompts, including hover tooltips. A reference library - organised by customer and work scope, plus an internal library - holds user manuals, policy and procedure manuals, clinical policies, rules and regulations, fee schedules, forms, code references, help links and training resources that stay updated with system changes. Users can attach a relevant policy or reference to any page, and a user manual is produced and kept current with every upgrade or release.","a":"Internal User","src":"DOC-068, PRO-033, CAS-012, CAS-020, CAS-024, CAS-112, CLA-100, CLA-103 to CLA-106, CLA-109"},"3.6.1":{"t":"Create provider case profile","x":"An internal user creates a provider case and records the provider name, NPI, tax ID (FEIN), addresses, locations, email, phone, fax, billing agent, billing-threshold requirements and case-specific service information. Each case receives a system-assigned case ID that is unique per case, and the case shows the customer's claims-transfer schedule.","a":"Internal User","src":"PRO-057, CAS-156, CAS-157, CAS-161, CAS-163 to CAS-173"},"3.6.3":{"t":"Verify authorised representatives","x":"The provider submits authorised-representative details before any communication about the review takes place. An authorised agent must be an owner or senior executive of the agency (for example Owner, CEO, CFO, Clinical Director, Medical Director or Office Manager) and cannot be an attorney. The system enforces the number of representatives allowed - two by default, or as set in the customer's contract (Decision D-14) - notifies staff when the details are submitted, and retains all authorised-contact history, contact information and links to outside sources such as LinkedIn.","a":"Provider; System; Internal User","src":"PRO-012 to PRO-014, PRO-057, CAS-155, CAS-174 to CAS-176"},"3.14.8":{"t":"Govern AI-assisted findings","x":"AI may extract, classify, summarise and highlight concerns with source evidence, but a qualified human makes the final decision; model, prompt and rule versions are controlled before production.","a":"Reviewer; System","src":"NFR-030, NFR-031, NFR-033"},"6.1.2":{"t":"Multi-Factor Authentication","x":"Require MFA for internal and external users.","a":"","src":"PRO-036, NFR-002"},"6.1.3":{"t":"Role-Based Access Control","x":"Provide role-, tenant-, program- and function-aware permissions, including administrator workflows to grant and revoke access.","a":"","src":"DOC-003, NFR-003"},"6.1.4":{"t":"Workforce SSO Setup","x":"Support enterprise SSO for workforce users; Microsoft Entra ID or another identity provider must be confirmed.","a":"","src":"CAS-009, CAS-029, NFR-004"},"6.1.5":{"t":"Provider Identity and Account Security","x":"Support secure provider registration, authorised-agent governance, identity verification and account recovery.","a":"","src":"NFR-005"},"D-14":{"t":"Authorised-agent limit","x":"Two agents (PRO-013, CAS-175) versus a customer-defined number (CAS-155). Working assumption: two by default, configurable per contract.","a":"CQH operations (decision)","src":""},"Q-010":{"t":"Identity","x":"Confirm workforce and provider identity providers, MFA, provisioning, authorized-agent verification, and account support.","a":"Security / Product (open question)","src":""},"3.1.8":{"t":"Technical platform operations","x":"The solution runs as modular, documented services with separate environments, monitoring, backups, restore testing, controlled deployments, rollback and agreed availability/support targets.","a":"System; IT / Support","src":"NFR-011, NFR-025, NFR-036"}};
+/* Sign-in and Access explorer: content. Behavior comes from the Sign-in and Access designs (Figma v8 + C-16 of Nov 21)
+   and the live prototype; requirement text is quoted from the SRS. Anything not settled is in CLAR and marked on the screen. */
+
+const DOCS = {
+  srs: {name: 'AtlasIQ – Software Requirement Specification (Updated)', file: 'AtlasIQ_-_Software_Requirement_Specification_Updated.docx', what: 'Functional requirements (sections 3.x), non-functional requirements (6.x), decisions (D-) and open questions (Q-).'},
+  scope: {name: 'AtlasIQ – Final Scope (Updated)', file: 'AtlasIQ___Final_Scope_Updated.xlsx', what: 'Sheet "Final Scope": one row per feature with its SRS reference, screen and source requirement IDs.'},
+  roles: {name: 'AtlasIQ Roles & Access', file: 'AtlasIQ_Roles___Access__Copy_.html', what: 'Who can do what, by role and area, with the SRS section behind each permission.'},
+  figma: {name: 'AtlasIQ Sign-in and Access – Figma file', file: 'AtlasIQ-Sign-in-and-Access-Figma-v8 (page "AtlasIQ · Sign-in and access v8 (Nov 20)") and page "AtlasIQ · C-16 Supervisor access (Nov 21)"', what: '208 frames (104 states × light and dark), named Theme · Code · Screen · State · Mode.'},
+  proto: {name: 'AtlasIQ Sign-in and Access – live prototype', file: 'Artifact', url: 'https://claude.ai/artifact/4E1hBjbsWJGJi9GL4wNxxY', what: 'Try it live (all journeys), All screens (every coded state) and Scope coverage.'},
+  guide: {name: 'Sign-in and Access Flow – Developer Implementation Guide', file: 'Claude Doc', url: 'https://claude.ai/artifact/H1puSyAL7tEeSuW2mbgGZc', what: 'The written version of this reference.'},
+  review: {name: 'Design review decisions (Nov 19 to 21, 2026)', file: 'Recorded in the project doc claude/sign-in-and-access-v1.md', what: 'Decisions agreed in review, for example authenticator app only at setup, no text messages, C-16 supervisor limits.'}
+};
+
+/* where each SRS item sits in the Final Scope sheet (feature ID) */
+const SCOPE_ID = {'3.1.1': '3.1.1', '3.1.2': '3.1.2', '3.1.3': '3.1.3', '3.1.4': '3.1.4', '3.1.5': '3.1.5', '3.1.6': '3.1.6', '3.1.7': '3.1.7', '3.1.9': '3.1.9', '3.2.1': '3.2.1', '3.2.4': '3.2.4', '3.6.1': '3.6.1', '3.6.3': '3.6.3', '6.1.2': 'NFR-28', '6.1.3': 'NFR-29', '6.1.4': 'NFR-30', '6.1.5': 'NFR-31'};
+const SCOPE_SCREEN = {'3.1.1': 'Sign-in page', '3.1.2': 'Sign-in page', '3.1.3': 'Staff profile', '3.1.4': 'Provider registration', '3.1.5': '(No screen of its own)', '3.1.6': '(No screen - background)', '3.1.7': '(No screen - background)', '3.1.9': 'External dashboards', '3.2.1': 'Home dashboard', '3.2.4': 'Home dashboard', '3.6.1': 'Provider case', '3.6.3': 'Provider case', '6.1.2': '(Applies to the whole platform)', '6.1.3': '(Applies to the whole platform)', '6.1.4': '(Applies to the whole platform)', '6.1.5': '(Applies to the whole platform)'};
+
+/* quoted from the Roles & Access file, area "Accounts" */
+const ROLES_ACCT = {
+  SU: 'Creates staff, customer and partner accounts; can suspend, restore or close provider access; sets password rules. (3.1.3, 3.1.9)',
+  SV: 'Creates workforce accounts and assigns access by role, customer, programme, function and view/upload/download. (3.1.3, 3.1.9)',
+  IU: 'Own account only: resets own password and recovers access. (3.1.2)',
+  PR: 'Registers their own account, verifies identity and recovers their own access. (3.1.4)',
+  CU: 'Own account only; account is created for them. (3.1.9)'
+};
+
+const USERS = {
+  pv: {name: 'Provider', d: 'Agency user. Registers the agency (3.1.4). AtlasIQ password + authenticator app.'},
+  cp: {name: 'Customer or partner', d: 'NC Medicaid staff, or an external partner such as the Attorney General\'s office, a licensure board or MID. Invited (3.1.9). AtlasIQ password + authenticator app.'},
+  st: {name: 'CQH staff', d: 'Any CQH role. Added under Staff accounts (3.1.3). Signs in through CQH\'s identity provider (6.1.4).'},
+  sv: {name: 'Supervisor', d: 'CQH staff who manage accounts and provider access, without superuser-only options.'},
+  su: {name: 'Superuser', d: 'CQH staff with every administration option, including sign-in rules.'}
+};
+
+/* Per-screen behavior. who: user keys; srs: [id, how this screen meets it]; clar: CLAR numbers; dec: review decisions */
+const SCR = {
+'g-signin': {who: ['pv', 'cp'], purpose: 'The sign-in page for everyone with an AtlasIQ password. Side panels point new agencies to registration, invited people to their email, and staff to the staff page.',
+  when: 'Whenever someone opens AtlasIQ signed out, or comes back from Back to sign in, Sign in again, Go to provider and customer sign-in (C-03) or Sign in (G-35).',
+  cond: ['No one is signed in.', 'The email is prefilled if "Remember my email address on this device" was ticked last time.', 'G-04 to G-06 and G-08 are the same page after a failed Sign in.'],
+  actions: ['Email address* and Password* (eye button appears after typing)', 'Remember my email address on this device', 'Sign in (disabled until both fields have a value)', 'Forgot your password?', 'Register your agency', 'Staff link to the staff page'],
+  success: 'A correct email and password opens Verification code (G-09). The wrong-password counter resets.',
+  failure: ['Bad email format: G-04, "Enter an email address in the correct format, such as name@agency.com".', 'Wrong email or password: G-05. The message never says which one. Password field cleared.', '4th wrong try: G-06, "You have 1 attempt remaining…" with Reset your password instead.', '5th wrong try, or any try while locked: G-07.', '@cqh.org address: G-08, Go to staff sign-in. The password is cleared and never sent.', 'Agency suspended or closed (after a correct password): G-15 or G-16.'],
+  notes: ['Use type="text" inputmode="email" for the email field (type=email lost the cursor position in the prototype).', 'Wrong passwords and wrong codes are counted separately (C-30).', 'Footer: "Every sign-in is recorded to protect patient information."'],
+  srs: [['3.1.1', 'Providers sign in with platform-held credentials and a second factor; the credential decides the workspace.'], ['3.1.2', 'Lockout after repeated failures; Forgot your password? starts recovery.'], ['3.1.4', 'Register your agency starts self-registration.'], ['3.1.9', 'Invited customers and partners use the same page.'], ['3.1.6', 'Every sign-in attempt is recorded.'], ['6.1.5', 'Provider account security.']],
+  clar: [1, 10, 11], dec: ['Two sign-in pages instead of one (see open point 1).']},
+'g-locked': {who: ['pv', 'cp'], purpose: 'Says the account is temporarily locked for security, until when, and what to do.',
+  when: 'On the 5th wrong password (G-07) or 5th wrong verification code (G-12), and on any sign-in while the lock lasts.',
+  cond: ['Lock lasts 15 minutes, then clears on its own.', 'G-07 also clears when the person saves a new password; both clear when an admin unlocks (C-23).'],
+  actions: ['G-07: Email me a password reset link', 'G-12: Contact CQH provider support (phone and email shown)', 'Back to sign in'],
+  success: 'Email me a password reset link sends the link to the masked address and opens Check your email (G-25).',
+  failure: ['Signing in before the unlock time returns here.'],
+  notes: ['Show the masked email and the unlock time in ET.', 'G-12 has no reset link: the password was right, so support resets two-step verification.', 'C-30 can notify the agency\'s supervisor at CQH when an account locks.'],
+  srs: [['3.1.2', 'Users handle lockouts; administrators unlock accounts.'], ['6.1.5', 'Account recovery.'], ['3.1.6', 'Lock events appear in sign-in history (C-22).']], clar: [4, 14]},
+'g-code': {who: ['pv', 'cp'], purpose: 'The second step of sign-in: a 6-digit code from the authenticator app, or from email as a backup.',
+  when: 'After a correct email and password, after choosing a method in Try another way (G-17), or after saving a new password from a reset link (G-29).',
+  cond: ['Authenticator version (G-09 to G-11) is the default.', 'Email version (G-18 to G-20) only after choosing Email code in G-17.', 'G-29 adds a banner: the password was just changed.'],
+  actions: ['6-digit code', 'Verify and sign in (disabled until 6 digits)', 'Try another way', 'Email version: Send a new code (after 45 seconds)', 'Back to sign in'],
+  success: 'Signed in. Providers land on their home (verification states G-55 to G-63, then the workspace); customers and partners on External dashboards. An expired password shows G-13 first.',
+  failure: ['Wrong app code: G-11, "That code isn\'t correct. Codes change every 30 seconds…".', 'Wrong email code: G-19, "…Check the most recent email from AtlasIQ and try again."', 'Expired email code: G-20, "That code has expired. Select Send a new code…".', '5th wrong code (any method): locked, G-12.'],
+  notes: ['Clear the field after a wrong code.', 'Email codes expire after 10 minutes.'],
+  srs: [['6.1.2', 'MFA required for external users.'], ['3.1.1', 'Providers complete a second factor.'], ['3.1.2', 'Lock after repeated wrong codes.']], clar: [5, 17], dec: ['Email code is a backup at sign-in only; no text messages (Nov 20).']},
+'g-expired': {who: ['pv', 'cp'], purpose: 'Makes the person choose a new password when theirs is older than the set period (90 days).',
+  when: 'After the two-step code is accepted, if the password has expired (prototype order).',
+  cond: ['Not shown when Change every is 0 on Sign-in rules (C-30).'],
+  actions: ['New password* (6 rules tick live)', 'Confirm new password* (live match message)', 'Save new password and continue (disabled until complete)', 'Back to sign in'],
+  success: 'Password saved; the person continues to their landing page.',
+  failure: ['Button stays disabled until every rule is met and both fields match.', 'Breach or reuse failure on save: message not designed.'],
+  notes: ['Stella\'s note on C-30: NIST SP 800-63B advises against scheduled changes when breach checking is on. CQH decides.'],
+  srs: [['3.1.2', 'Administrators enforce how often passwords must change.']], clar: [4, 10, 16]},
+'g-suspended': {who: ['pv'], purpose: 'Tells a provider user their agency\'s access is suspended and that records are safe.',
+  when: 'When a user of a suspended agency signs in with a correct password. Everyone at the agency is signed out at the moment of suspension.',
+  cond: ['Agency suspended in C-19, until restored in C-20.'],
+  actions: ['Contact CQH provider support (1-800-555-0142, Mon to Fri, 8 AM to 5 PM ET, providersupport@cqh.org)', 'Back to sign in'],
+  success: 'Nothing on this screen restores access; only CQH can (C-20).', failure: ['Not applicable.'],
+  notes: ['Never show the suspension reason (internal only).', 'Reviews continue and letters go by mail while suspended.'],
+  srs: [['3.1.3', 'Supervisors and superusers can suspend, restore or close a provider\'s access.']], clar: [10, 11]},
+'g-closed': {who: ['pv'], purpose: 'Tells the person their account was closed, and when.',
+  when: 'When a user of a closed agency signs in with a correct password.',
+  cond: ['Agency closed in C-21. Permanent.'],
+  actions: ['Contact CQH provider support', 'Back to sign in'],
+  success: 'None.', failure: ['Not applicable.'],
+  notes: ['Shows the masked email and the closing date. Records, claims and letters are kept.'],
+  srs: [['3.1.3', 'Supervisors and superusers can close a provider\'s access.']], clar: [11, 13]},
+'g-another': {who: ['pv', 'cp'], purpose: 'Offers backup ways to finish two-step verification when the authenticator app isn\'t at hand.',
+  when: 'Try another way on Verification code.',
+  cond: ['Always lists Authenticator app (tagged Current method), Email code (masked address) and Recovery code.'],
+  actions: ['Authenticator app', 'Email code', 'Recovery code', 'Contact support ("Can\'t use any of these?")', 'Back'],
+  success: 'Email code sends a code and opens G-18; Recovery code opens G-21; Authenticator app opens G-09.',
+  failure: ['No option works: CQH provider support confirms identity and resets two-step verification (process not designed).'],
+  notes: ['Remember the method last used.'],
+  srs: [['6.1.2', 'MFA for external users.'], ['3.1.2', 'Users recover access.'], ['6.1.5', 'Account recovery.']], clar: [5, 14], dec: ['Three options only; text messages not offered (Nov 20).']},
+'g-recovery': {who: ['pv', 'cp'], purpose: 'Signs the person in with one of the 10 single-use recovery codes saved at setup.',
+  when: 'Recovery code in Try another way (G-17).',
+  cond: ['Every account has recovery codes from setup.'],
+  actions: ['Recovery code* (dashes and spaces optional)', 'Verify and sign in (disabled until 8 characters)', 'Back'],
+  success: 'Signed in; that code is used up. The page says how many will be left.',
+  failure: ['Wrong or used code: G-22, "That recovery code isn\'t correct, or it has already been used…". Counts toward the 5-code lock.'],
+  notes: ['Compare case-insensitively, ignoring dashes and spaces. A used code never works again.'],
+  srs: [['6.1.2', 'MFA.'], ['3.1.2', 'Users recover access.']], clar: [15]},
+'g-forgot': {who: ['pv', 'cp'], purpose: 'Requests a link to set a new password.',
+  when: 'Forgot your password? (G-01), Reset your password instead (G-06) or Use a different email address (G-25).',
+  cond: ['Email prefilled if typed on the sign-in page.'],
+  actions: ['Email address*', 'Send reset link (disabled when empty)', 'Reset your CQH work password (staff, opens CQH self-service reset)', 'Back to sign in'],
+  success: 'Opens Check your email (G-25). The email is sent only if an account exists.',
+  failure: ['Bad format: G-24, "Enter an email address in the correct format, such as name@agency.com".'],
+  notes: ['Never reveal whether the account exists.'],
+  srs: [['3.1.2', 'Users reset passwords.'], ['3.1.4', 'Providers recover their own access.'], ['6.1.5', 'Account recovery.']], clar: []},
+'g-sent': {who: ['pv', 'cp'], purpose: 'Confirms the reset request without saying whether the account exists.',
+  when: 'Send reset link (G-23), Email me a password reset link (G-07) or Send a new link (G-30).',
+  cond: ['"If an account exists for d•••••y@…, we\'ve sent a link… used once and expires in 30 minutes."'],
+  actions: ['Resend the link (after a 45-second countdown)', 'Use a different email address', 'Back to sign in', 'In the email: Set a new password'],
+  success: 'A valid link opens Create a new password (G-26).', failure: ['A used or expired link opens G-30.'],
+  notes: ['Junk-folder hint is part of the design.'],
+  srs: [['3.1.2', 'Password reset.']], clar: [17]},
+'g-newpw': {who: ['pv', 'cp'], purpose: 'Sets a new password from a valid reset link.',
+  when: 'Opening a reset link that is unused and under 30 minutes old.',
+  cond: ['Shows the masked email the link belongs to.'],
+  actions: ['New password* (6 rules)', 'Confirm new password*', 'Save new password', 'Back to sign in'],
+  success: 'Saved; other sessions are signed out and any lock clears. Verification code (G-29) follows.',
+  failure: ['G-27: "The passwords don\'t match. Re-enter the new password."', 'Breach or reuse failure on save: not designed.'],
+  notes: ['Rules: 12+ characters, upper and lower case, a number, a symbol, not one of the last 5, not in known breaches (checked on save).'],
+  srs: [['3.1.2', 'Password reset and rules.']], clar: [16]},
+'g-linkexp': {who: ['pv', 'cp'], purpose: 'Explains that the reset link was already used or is older than 30 minutes.',
+  when: 'Opening an invalid reset link.', cond: ['Shown instead of G-26 for any invalid link.'],
+  actions: ['Send a new link (to the masked address)', 'Back to sign in'],
+  success: 'A new link is sent; Check your email (G-25) opens.', failure: ['Not applicable.'],
+  notes: ['Take the address from the expired link\'s token; don\'t ask again.'],
+  srs: [['3.1.2', 'Password reset.']], clar: [17]},
+'g-r1': {who: ['pv'], purpose: 'Registration step 1 of 6: identifies the agency and matches NPI and tax ID to the NC Medicaid enrollment record.',
+  when: 'Register your agency on Sign in.', cond: ['"Have these ready" panel lists what\'s needed, including an authenticator app and proof of role for up to 2 representatives.'],
+  actions: ['Agency name*, Agency NPI* (10 digits), Tax ID (FEIN)* (9 digits), Agency phone number*, Fax number (optional)', 'Tooltips on NPI and tax ID (hover or focus; Escape closes)', 'Use the enrolled name / Keep my entry (G-32)', 'Continue (disabled until complete)', 'Already registered? Sign in'],
+  success: 'NPI and tax ID match: step 2 (G-36).',
+  failure: ['Field errors: "Enter the 10-digit NPI", "Enter the 9-digit tax ID", "Enter a 10-digit phone number…", "Enter a 10-digit fax number, or leave this empty".', 'No match: G-34, with Contact support.', 'Already registered: G-35, "Someone at [agency] already has an AtlasIQ account. Ask them to add you as a user, or sign in…".'],
+  notes: ['Stella\'s name suggestion uses the public NPI registry; nothing changes until the person chooses.'],
+  srs: [['3.1.4', 'Providers register themselves and verify identity.'], ['6.1.5', 'Secure provider registration and identity verification.'], ['3.6.1', 'Agency name, NPI, tax ID, phone and fax are recorded (CAS-163 to CAS-173). Note: 3.6.1 is written for an internal user creating the provider case; registration collects the same contact fields from the provider.'], ['3.2.4', 'Hover tooltips (CAS-024).'], ['3.14.8', 'Stella suggests; the person decides.']], clar: [7, 12]},
+'g-r2': {who: ['pv'], purpose: 'Step 2: the person registering. Their work email becomes their sign-in name.',
+  when: 'After step 1, or Change email address in step 3.', cond: [],
+  actions: ['First name*, Last name*, Job title*, Work email address*, Phone number*', '"I\'m an owner or senior executive of [agency]" checkbox', 'Continue', 'Back'],
+  success: 'A 6-digit code is emailed; step 3 (G-39).',
+  failure: ['G-38 field errors, for example "Enter a 10-digit phone number, including the area code, such as (919) 555-0148".'],
+  notes: ['The owner checkbox is stored but doesn\'t prefill step 6.'],
+  srs: [['3.1.4', 'Self-registration.'], ['3.6.3', 'Authorised agents are owners or senior executives.']], clar: [9]},
+'g-r3': {who: ['pv'], purpose: 'Step 3: proves the registrant owns the work email address.',
+  when: 'After step 2.', cond: ['Shows the masked address.'],
+  actions: ['6-digit code', 'Verify email address', 'Send a new code (after 45 seconds)', 'Change email address', 'Back'],
+  success: 'Step 4 (G-42).', failure: ['G-40: "That code isn\'t correct…"', 'G-41: "That code has expired…"'],
+  notes: ['Code expires in 10 minutes.'],
+  srs: [['3.1.4', 'Providers verify their identity.'], ['6.1.5', 'Identity verification.']], clar: [17]},
+'g-r4': {who: ['pv'], purpose: 'Step 4: creates the password.', when: 'After the email is verified.', cond: ['5 rules (no reuse rule for a new account).'],
+  actions: ['Password*', 'Confirm password*', 'Continue', 'Back'], success: 'Step 5 (G-45).',
+  failure: ['G-43: "The passwords don\'t match…"', 'Breach failure message not designed.'], notes: [],
+  srs: [['3.1.4', 'Self-registration.'], ['3.1.2', 'Password rules.']], clar: [16]},
+'g-r5': {who: ['pv'], purpose: 'Step 5: sets up the authenticator app, required at every sign-in.', when: 'After step 4.', cond: ['Authenticator app only at setup.'],
+  actions: ['Scan the QR code, or Copy key', '6-digit code', 'Verify and continue', 'Contact support (no smartphone)', 'Back'],
+  success: 'Recovery codes (G-47).', failure: ['G-46: "That code isn\'t correct. Enter the 6-digit code your authenticator app shows for AtlasIQ now."'], notes: ['Step named "Two-step verification".'],
+  srs: [['6.1.2', 'MFA for external users.'], ['3.1.1', 'Second factor.']], clar: [14, 17], dec: ['Authenticator app only at registration (Nov 20).']},
+'g-r5c': {who: ['pv'], purpose: 'Step 5: gives 10 single-use recovery codes.', when: 'After the app is verified.', cond: ['Shown once; can\'t be viewed again.'],
+  actions: ['Copy codes, Download, Print', '"I\'ve saved my recovery codes in a safe place"*', 'Continue'],
+  success: 'Step 6 (G-49).', failure: ['Continue disabled until the box is ticked.'], notes: ['"Each of these 10 codes can be used one time only."'],
+  srs: [['3.1.2', 'Users recover access.'], ['6.1.5', 'Account recovery.']], clar: [15]},
+'g-r6': {who: ['pv'], purpose: 'Step 6: names the people CQH may discuss the review with. Owners or senior executives only, never attorneys.',
+  when: 'After recovery codes are saved.', cond: ['Counter "0 of 2 added".', 'At the limit (G-53) the add button is replaced by "You\'ve named the maximum your contract allows (2). To change who is named later, please contact support."'],
+  actions: ['Add a representative: Full name*, Role*, Email*, Phone*, Fax (optional), Profile link (optional), Proof of role* (PDF or image, 10 MB)', 'Add representative / Cancel', 'Remove', 'Statement checkbox*', 'Submit registration'],
+  success: 'Submitted; confirmation email; staff notified; Registration submitted (G-54).',
+  failure: ['G-51 form errors.', 'Add representative disabled until complete.', 'Submit disabled with reason: "Add at least one representative to submit." / "Confirm the statement above to submit." / "Add or cancel the representative you\'re entering to continue."'],
+  notes: ['Stella checks the proof is readable; CQH makes the final check.', 'G-50 shows the registrant listed as "You" because the sample person added herself; it is not a prefill.'],
+  srs: [['3.6.3', 'Owner or senior executive, not an attorney; two by default (D-14); staff notified; history kept.'], ['3.1.5', 'Protected screens blocked until verified.'], ['D-14', 'Two by default, configurable per contract.'], ['3.14.8', 'Stella checks; a person decides.']], clar: [6, 7, 9]},
+'g-r7': {who: ['pv'], purpose: 'Confirms the submission and shows the three verification steps.', when: 'Submit registration.', cond: ['Step 1 Complete, Step 2 In review, Step 3 Locked.'],
+  actions: ['Go to your home page'], success: 'Provider home while CQH verifies (G-55); the registrant is signed in.', failure: ['Not applicable.'], notes: ['"Usually within 2 business days."'],
+  srs: [['3.1.4', 'Unverified users get limited functions.'], ['3.6.3', 'Staff are notified.']], clar: []},
+'g-home': {who: ['pv'], purpose: 'The provider home until a representative is verified. One status explains where things stand.',
+  when: 'Go to your home page (G-54), or signing in before full verification.',
+  cond: ['review: G-55', 'action (CQH didn\'t accept): G-58', 'resent: G-61', 'verified: G-63', 'Until verified: Claim status, Upload records, Letters, Chat assistant and search are locked; Training, Support and Representatives stay open.'],
+  actions: ['G-58: Send new proof of role, Name a different representative', 'G-63: Go to Claim status', 'Locked menu items open G-56 or G-57'],
+  success: 'Send new proof of role opens G-60.', failure: ['Not applicable.'], notes: ['CQH\'s message is shown word for word with name and date.'],
+  srs: [['3.1.5', 'Protected screens and chatbot blocked until the agent is verified.'], ['3.1.4', 'Unverified users get limited functions.']], clar: [18]},
+'g-larea': {who: ['pv'], purpose: 'Explains why an area is locked and when it opens.', when: 'Choosing a locked area before verification.', cond: ['One template for Claim status, Upload records, Letters and Chat assistant.'],
+  actions: ['See verification status', 'Contact support'], success: 'Back to the home page.', failure: ['Not applicable.'], notes: ['Only G-56 and G-57 are drawn.'],
+  srs: [['3.1.5', 'Protected provider screens blocked until verified.']], clar: []},
+'g-reps': {who: ['pv'], purpose: 'Shows who can speak for the agency, CQH\'s messages and history; sends new proof of role.',
+  when: 'Your agency › Representatives in the menu, or Send new proof of role.', cond: ['Cards with role, status badge, masked phone, proof file and profile link. History newest first.'],
+  actions: ['G-59: Send new proof of role', 'G-60: Proof of role*, Note to CQH (optional), Send to CQH, Cancel', 'G-64: Add a representative'],
+  success: 'Send to CQH: receipt email; status In review (G-62).', failure: ['Send to CQH disabled until a file is chosen.'], notes: ['Nothing goes to CQH until Send to CQH.'],
+  srs: [['3.6.3', 'All authorised-contact history kept.'], ['3.1.5', 'Enforcement until verified.']], clar: [18]},
+'g-timeout': {who: ['pv', 'cp'], purpose: 'Warns before automatic sign-out after inactivity.', when: '13 minutes without activity.', cond: ['Dialog over the current page with a 2-minute countdown: "Any unsaved changes will be lost."'],
+  actions: ['Stay signed in', 'Sign out now'], success: 'Session continues on the same page.', failure: ['No choice: signed out (G-66).'], notes: ['Focus stays in the dialog (WCAG 2.2.1).'],
+  srs: [], clar: [4, 26], nosrs: 'No SRS requirement states an idle timeout. Values come from the Sign-in rules design (C-30).'},
+'g-out': {who: ['pv', 'cp'], purpose: 'Confirms the person is signed out, and why.', when: 'Idle timeout (G-66) or Sign out (G-67).', cond: [],
+  actions: ['Sign in again'], success: 'Sign in (G-01).', failure: ['Not applicable.'], notes: ['End the session on the server.'],
+  srs: [], clar: [26], nosrs: 'No SRS requirement covers sign-out screens.'},
+'g-invite': {who: ['cp'], purpose: 'Invitation step 1 of 3: creates the account.', when: 'Accept invitation in a valid invitation email (under 7 days).', cond: ['Email fixed by the invitation. Side panel: who invited them, organization, what they can do, expiry.'],
+  actions: ['Full name*, Create a password*, Confirm password*', 'Create account', 'Back to sign in'],
+  success: 'Set up two-step verification (G-70).', failure: ['Create account disabled until complete.'], notes: ['Abilities come from C-28.'],
+  srs: [['3.1.9', 'Accounts given by a superuser or supervisor; view, download and upload limits.'], ['Q-010', 'Sign-in method to confirm.']], clar: [2]},
+'g-imfa': {who: ['cp'], purpose: 'Invitation step 2: sets up the authenticator app.', when: 'After step 1.', cond: ['Same as registration step 5.'],
+  actions: ['Scan QR or Copy key', '6-digit code', 'Verify and continue', 'Back'], success: 'Recovery codes (G-72).', failure: ['G-71: "That code isn\'t correct…"'], notes: [],
+  srs: [['3.1.9', 'Customers and partners complete MFA.'], ['6.1.2', 'MFA for external users.']], clar: []},
+'g-icodes': {who: ['cp'], purpose: 'Invitation step 3: gives the 10 recovery codes.', when: 'After the app is verified.', cond: ['Shown once.'],
+  actions: ['Copy codes, Download, Print', 'Checkbox*', 'Finish and open AtlasIQ'], success: 'Lands on External dashboards.', failure: ['Button disabled until the box is ticked.'], notes: [],
+  srs: [['3.1.9', 'Reach only what is released to them.'], ['3.1.2', 'Recover access.']], clar: []},
+'g-invexp': {who: ['cp'], purpose: 'Explains that the invitation is more than 7 days old.', when: 'Opening an expired invitation.', cond: ['Masked address and expiry date.'],
+  actions: ['Request a new invitation', 'Back to sign in'], success: 'The sender is asked to send a new one; the requester is emailed.', failure: ['Not applicable.'], notes: ['Staff can also resend from C-27.'],
+  srs: [['3.1.9', 'Accounts given by a superuser or supervisor.']], clar: [4, 24]},
+'d-signin': {who: ['st', 'sv', 'su'], purpose: 'Starts single sign-on with the person\'s CQH work account.', when: 'Staff sign-in address, Go to staff sign-in (G-08), Back to staff sign-in, Sign in again.',
+  cond: ['Side panel with Stella\'s service status (from the Stella status page).'],
+  actions: ['Work email address*', 'Continue with CQH account', 'Reset it with CQH self-service password reset', 'Contact IT support', 'Go to the provider and customer sign-in'],
+  success: 'A @cqh.org address goes to CQH\'s sign-in page (C-04).',
+  failure: ['Empty: button disabled.', 'Bad format: "…such as name@cqh.org".', 'Non-CQH address: C-03, Go to provider and customer sign-in.'],
+  notes: ['AtlasIQ never sees the work password; staff recognized by @cqh.org.'],
+  srs: [['3.1.1', 'Internal users sign in through the organisation\'s identity provider.'], ['6.1.4', 'Enterprise SSO for workforce users.']], clar: [1, 3]},
+'d-idp': {who: ['st', 'sv', 'su'], purpose: 'Placeholder for CQH\'s own sign-in page, which AtlasIQ doesn\'t design.', when: 'Continue with CQH account.', cond: ['Owned by CQH\'s identity provider.'],
+  actions: ['At CQH: sign in with work password and CQH MFA, or cancel', 'Prototype only: Continue as if signed in at CQH / Cancel at CQH'],
+  success: 'CQH returns the person; AtlasIQ checks the staff account: none → C-08; deactivated → C-09; no program → C-07; one → C-06; several → C-05.',
+  failure: ['Canceled, denied or timed out: C-10.'], notes: [],
+  srs: [['6.1.4', 'Workforce SSO; Microsoft Entra ID or another provider to be confirmed.'], ['3.1.1', 'Internal users complete MFA at the identity provider.']], clar: [3]},
+'d-program': {who: ['st', 'sv', 'su'], purpose: 'Decides which program\'s workspace opens after sign-in.', when: 'After CQH sign-in, for an active account.',
+  cond: ['C-05: more than one program, unless "Open this program automatically next time" was ticked. Stella preselects the one that needs attention.', 'C-06: one program; opens on its own after about 2 seconds.', 'C-07: no program; Stella names the supervisor.'],
+  actions: ['C-05: choose, remember checkbox, Open workspace', 'C-07: Email Priya Shah, Sign out, Contact IT support', 'Not you? Sign out'],
+  success: 'The staff home (Pod Central) opens for that program.', failure: ['C-07 has no workspace to open.'], notes: ['"You can switch programs at any time from the top of the page."'],
+  srs: [['6.1.3', 'Program-aware permissions.'], ['3.2.1', 'After login, each user lands on a role-based home page ("Pod Central").'], ['3.14.8', 'Stella preselects; the person chooses.']], clar: [8, 21]},
+'d-ssoerr': {who: ['st'], purpose: 'Explains why a staff member can\'t get into AtlasIQ and who can help.', when: 'C-08: no AtlasIQ staff account. C-09: account deactivated. C-10: CQH sign-in canceled or not finished.',
+  cond: ['C-08 masked email + Stella\'s supervisor note. C-09 deactivation date. C-10 "Nothing has changed."'],
+  actions: ['C-08: Email Priya Shah', 'C-09: Contact IT support', 'C-10: Try again', 'Back to staff sign-in'],
+  success: 'C-10 Try again returns to C-04.', failure: ['Not applicable.'], notes: ['After C-08 or C-09 the CQH session may still be active.'],
+  srs: [['3.1.3', 'Supervisors or superusers create workforce accounts.'], ['6.1.3', 'Administrators grant and revoke access.'], ['6.1.4', 'Workforce SSO.']], clar: [20, 21]},
+'d-timeout': {who: ['st'], purpose: 'Warns staff 2 minutes before the idle sign-out.', when: '13 minutes without activity.', cond: ['Dialog with a 2-minute countdown; it says the open review was saved.'],
+  actions: ['Stay signed in', 'Sign out now'], success: 'Session continues.', failure: ['No choice: C-12.'], notes: [],
+  srs: [], clar: [19], nosrs: 'No SRS requirement states a staff idle timeout.'},
+'d-out': {who: ['st'], purpose: 'Confirms the staff member is signed out of AtlasIQ.', when: 'Idle timeout (C-12) or Sign out (C-13).', cond: ['C-12: "Your open review was saved." C-13: sign out of your CQH account too on shared computers.'],
+  actions: ['Sign in again'], success: 'Staff sign-in (C-01).', failure: ['Not applicable.'], notes: ['Signing out of AtlasIQ doesn\'t sign out of CQH.'],
+  srs: [], clar: [19, 26], nosrs: 'No SRS requirement covers staff sign-out screens.'},
+'d-staff': {who: ['sv', 'su'], purpose: 'Lists every CQH person with AtlasIQ access.', when: 'Administration › Staff accounts.', cond: ['Stella\'s "Needs you" briefing; table with role, programs, permissions, last sign-in, status; search and filters.'],
+  actions: ['Add a staff user', 'Reassign Sam\'s reviews / Remind Nina', 'Row actions › Deactivate'], success: 'Opens C-15 (C-16 for supervisors) or C-17.', failure: ['Not applicable.'], notes: [],
+  srs: [['3.1.3', 'Supervisors or superusers create workforce accounts.'], ['6.1.3', 'Administrator workflows to grant and revoke access.']], clar: [21]},
+'d-adduser': {who: ['sv', 'su'], purpose: 'Gives a CQH colleague access by role, customer, program and function.', when: 'Add a staff user (C-14).',
+  cond: ['C-15 for superusers; C-16 for supervisors: the Superuser role and Export are disabled, with the reason and an info banner.'],
+  actions: ['Full name*, Work email*, Role*, Team*, Customer*, Programs*, Functions*', 'View, Upload, Download, Export', 'Use these settings (Stella)', 'Add user / Cancel'],
+  success: 'Added to CQH\'s identity provider group for AtlasIQ; emailed; signs in and lands on Pod Central.',
+  failure: ['Supervisor limits shown as disabled options, not errors.', 'Form validation messages not designed.'], notes: ['Enforce limits on the server too. Link each reason to its control (aria-describedby).'],
+  srs: [['3.1.3', 'Assign access by role, customer, programme, function and view/upload/download.'], ['6.1.3', 'Role-, tenant-, program- and function-aware permissions.'], ['3.2.4', 'Tooltips.'], ['3.14.8', 'Stella suggests; the person decides.']], clar: [23, 27], dec: ['C-16: supervisors can\'t give the Superuser role or Export (Nov 21).']},
+'d-user': {who: ['sv', 'su'], purpose: 'One account page for staff and provider people: access, security, assigned work and sign-in history.', when: 'C-17: a staff row\'s Deactivate. C-22: Open Denise Roy (C-18) or a provider person\'s row.',
+  cond: ['C-17 dialog: Return reviews to the main queue / Reassign them.', 'C-22: locked until 10:42 AM ET, Stella\'s explanation, security details, sign-in history with IP and device.', 'C-23 dialog: Also email her a password reset link.'],
+  actions: ['Deactivate Sam / Cancel', 'Unlock and send a reset link, Unlock only, Unlock account, Send password reset, Reset two-step verification, Export history'],
+  success: 'Deactivation stops AtlasIQ sign-in (C-09). Unlock lets the provider sign in at once.', failure: ['Not applicable.'], notes: ['Every action is audit-logged (unlock with IP address).'],
+  srs: [['3.1.3', 'Revoke workforce access.'], ['6.1.3', 'Grant and revoke access.'], ['3.1.2', 'Administrators unlock accounts and reset them.'], ['3.1.6', 'Login status with dates, times and source IP.']], clar: [14, 21]},
+'d-pacc': {who: ['sv', 'su'], purpose: 'Suspend, restore or close an agency, and verify representatives.', when: 'Administration › Provider access.', cond: ['Briefing; table with representative status and access.'],
+  actions: ['Review representative', 'Open Denise Roy', 'Suspend: Reason* (internal), Suspend access', 'Restore access', 'Close: "I understand this can\'t be undone", Close access'],
+  success: 'Suspend signs everyone out (G-15). Restore reverses it. Close ends access for good (G-16).', failure: ['Dialog buttons disabled until the reason or checkbox is done.'], notes: ['Audit-logged.'],
+  srs: [['3.1.3', 'Supervisors and superusers can suspend, restore or close a provider\'s access.']], clar: [11, 13], roles: 'Roles & Access lists suspend, restore and close under the Superuser; SRS 3.1.3 names supervisors and superusers.'},
+'d-verify': {who: ['sv', 'su'], purpose: 'A person checks the proof of role and decides.', when: 'Review representative, or the staff notification after registration or new proof.',
+  cond: ['"Checked by Stella": state filing, State Bar directory, email domain, readability. "Checks are suggestions. Only a person can verify a representative."'],
+  actions: ['Show phone and fax (logged)', 'Open the proof of role / the state filing', 'Verify Maya Patel → Verify representative', 'Don\'t accept → reason + message → Send decision'],
+  success: 'Verified: agency gets full access and an email (G-63, G-64). Not accepted: agency sees G-58, G-59.', failure: ['Not applicable.'], notes: ['History newest first.'],
+  srs: [['3.6.3', 'Notifies staff; keeps contact history and outside links.'], ['3.1.5', 'Enforcement until verified.'], ['3.14.8', 'AI highlights; a human decides.'], ['3.1.6', 'Every important access is recorded.']], clar: []},
+'d-cp': {who: ['sv', 'su'], purpose: 'Lists people outside CQH who see released work.', when: 'Administration › Customers and partners; C-29 after Send invitation.', cond: ['Type, organization, permissions, status (Active, Invited, Locked).'],
+  actions: ['Invite someone', 'Open Chris Odom', 'Resend Morgan\'s invitation'], success: 'Invite someone opens C-28.', failure: ['Not applicable.'], notes: [],
+  srs: [['3.1.9', 'Accounts given by a superuser or supervisor; access logged.']], clar: [11]},
+'d-invite': {who: ['sv', 'su'], purpose: 'Sends an invitation that works for 7 days.', when: 'Invite someone (C-27).',
+  cond: ['Customer user or External partner; Full name*, Email*, Organization*, Program*; View, Download, Upload; sign-in method (organization sign-in off: Q-010).'],
+  actions: ['Fill in the form', 'Send invitation / Cancel'], success: 'Invitation emailed; C-29.', failure: ['Validation not designed.'], notes: ['They see only what CQH releases to their program.'],
+  srs: [['3.1.9', 'View, download and upload limits; Q-010 open.'], ['6.1.3', 'Grant access.'], ['Q-010', 'Identity method to confirm.']], clar: [2, 23]},
+'d-rules': {who: ['su'], purpose: 'Sets the rules for AtlasIQ-password users.', when: 'Administration › Sign-in rules.',
+  cond: ['Passwords, Lockout, Links and codes, Sessions, Two-step verification, Recovery codes. Stella\'s NIST note.'],
+  actions: ['Change a value', 'Keep 90 days / Stop scheduled changes', 'Save changes'], success: 'Applies at each person\'s next sign-in; audit-logged.', failure: ['Allowed ranges not defined.'], notes: ['Staff follow CQH\'s identity provider rules.'],
+  srs: [['3.1.2', 'Administrators enforce password rules, including complexity and how often passwords must change.'], ['6.1.2', 'MFA.']], clar: [4, 22, 23], roles: 'Roles & Access: the Superuser "sets password rules"; the Supervisor entry doesn\'t include it.'}
+};
+
+/* connections. kind: main | alt | err | fx (an admin action that changes what someone else sees). 'OUT:x' = outside Sign-in and Access */
+const EDGES = [
+ [['G-01', 'G-02', 'G-03'], 'Sign in, correct email and password', 'G-09', 'main'], [['G-01', 'G-02', 'G-03'], 'Badly formatted email', 'G-04', 'err'], [['G-01', 'G-02', 'G-03'], 'Wrong email or password', 'G-05', 'err'],
+ [['G-01', 'G-02', 'G-03'], 'Types a @cqh.org address', 'G-08', 'alt'], [['G-01', 'G-02', 'G-03', 'G-04', 'G-05'], 'Forgot your password?', 'G-23', 'alt'], [['G-01'], 'Register your agency', 'G-31', 'alt'],
+ [['G-01', 'G-02', 'G-03'], 'Agency suspended (correct password)', 'G-15', 'err'], [['G-01', 'G-02', 'G-03'], 'Agency closed (correct password)', 'G-16', 'err'], [['G-01', 'G-02', 'G-03'], 'Account is locked', 'G-07', 'err'],
+ [['G-01', 'G-02'], 'Eye button', 'G-03', 'alt'], [['G-01'], 'Enters email and password', 'G-02', 'main'], [['G-33'], 'Escape or moving focus closes the tooltip', 'G-31', 'alt'], [['G-63', 'G-55'], '13 minutes without activity', 'G-65', 'alt'], [['G-04'], 'Correct the email, Sign in', 'G-09', 'main'], [['G-05'], '4th wrong try', 'G-06', 'err'], [['G-05', 'G-06'], 'Correct password', 'G-09', 'main'],
+ [['G-06'], 'Reset your password instead', 'G-23', 'alt'], [['G-06'], '5th wrong try', 'G-07', 'err'], [['G-07'], 'Email me a password reset link', 'G-25', 'alt'], [['G-07', 'G-12', 'G-15', 'G-16'], 'Back to sign in', 'G-01', 'alt'],
+ [['G-08'], 'Go to staff sign-in', 'C-01', 'alt'],
+ [['G-09'], 'Type 6 digits', 'G-10', 'main'], [['G-10', 'G-18', 'G-21', 'G-29'], 'Correct code, provider (in verification)', 'G-55', 'main'], [['G-10', 'G-18', 'G-21', 'G-29'], 'Correct code, customer or partner', 'OUT:External dashboards', 'main'],
+ [['G-10', 'G-18', 'G-21'], 'Correct code, password expired', 'G-13', 'alt'], [['G-10', 'G-29'], 'Wrong code', 'G-11', 'err'], [['G-09', 'G-10', 'G-11', 'G-18', 'G-19', 'G-20'], 'Try another way', 'G-17', 'alt'],
+ [['G-11'], 'Enter the current code', 'G-10', 'main'], [['G-11', 'G-19', 'G-22'], '5th wrong code', 'G-12', 'err'],
+ [['G-13'], 'Type a new password', 'G-14', 'main'], [['G-14'], 'Save new password and continue', 'OUT:Landing page (home or External dashboards)', 'main'],
+ [['G-17'], 'Email code', 'G-18', 'alt'], [['G-17'], 'Recovery code', 'G-21', 'alt'], [['G-17'], 'Authenticator app, or Back', 'G-09', 'alt'],
+ [['G-18'], 'Wrong code', 'G-19', 'err'], [['G-18'], 'Code older than 10 minutes', 'G-20', 'err'], [['G-19', 'G-20'], 'Send a new code', 'G-18', 'alt'],
+ [['G-21'], 'Wrong or used code', 'G-22', 'err'], [['G-22'], 'Try again', 'G-21', 'main'], [['G-21', 'G-22'], 'Back', 'G-17', 'alt'],
+ [['G-23'], 'Send reset link', 'G-25', 'main'], [['G-23'], 'Badly formatted email', 'G-24', 'err'], [['G-24'], 'Correct it, Send reset link', 'G-25', 'main'], [['G-23', 'G-24', 'G-25', 'G-26', 'G-30'], 'Back to sign in', 'G-01', 'alt'],
+ [['G-25'], 'Opens a valid link in the email', 'G-26', 'main'], [['G-25'], 'Opens a used or expired link', 'G-30', 'err'], [['G-25'], 'Use a different email address', 'G-23', 'alt'],
+ [['G-26'], 'Confirmation doesn\'t match', 'G-27', 'err'], [['G-26', 'G-27'], 'Every rule met, both match', 'G-28', 'main'], [['G-28'], 'Save new password', 'G-29', 'main'], [['G-30'], 'Send a new link', 'G-25', 'main'],
+ [['G-31'], 'Enters details; enrolled name differs', 'G-32', 'alt'], [['G-31'], 'Focuses an info icon', 'G-33', 'alt'], [['G-31', 'G-32'], 'Continue, NPI and tax ID match', 'G-36', 'main'], [['G-31', 'G-32'], 'Continue, no enrollment match', 'G-34', 'err'],
+ [['G-31', 'G-32'], 'Continue, agency already registered', 'G-35', 'err'], [['G-34'], 'Fix NPI or tax ID, Continue', 'G-36', 'main'], [['G-35', 'G-31'], 'Sign in / Back to sign in', 'G-01', 'alt'],
+ [['G-36'], 'Fills in the form', 'G-37', 'main'], [['G-36', 'G-37'], 'Continue with errors', 'G-38', 'err'], [['G-37', 'G-38'], 'Continue, code emailed', 'G-39', 'main'], [['G-36', 'G-37', 'G-38'], 'Back', 'G-31', 'alt'],
+ [['G-39'], 'Correct code', 'G-42', 'main'], [['G-39'], 'Wrong code', 'G-40', 'err'], [['G-39'], 'Code older than 10 minutes', 'G-41', 'err'], [['G-40', 'G-41'], 'Send a new code / try again', 'G-39', 'alt'], [['G-39', 'G-40', 'G-41'], 'Change email address', 'G-36', 'alt'],
+ [['G-42'], 'Confirmation doesn\'t match', 'G-43', 'err'], [['G-42', 'G-43'], 'Every rule met, both match', 'G-44', 'main'], [['G-44'], 'Continue', 'G-45', 'main'], [['G-42', 'G-43', 'G-44'], 'Back', 'G-39', 'alt'],
+ [['G-45'], 'Correct app code', 'G-47', 'main'], [['G-45'], 'Wrong app code', 'G-46', 'err'], [['G-46'], 'Enter the current code', 'G-45', 'main'],
+ [['G-47'], 'Ticks "I\'ve saved my recovery codes"', 'G-48', 'main'], [['G-48'], 'Continue', 'G-49', 'main'],
+ [['G-49', 'G-52'], 'Add a representative', 'G-50', 'main'], [['G-50'], 'Add representative with errors', 'G-51', 'err'], [['G-50', 'G-51'], 'Add representative (first person)', 'G-52', 'main'], [['G-50', 'G-51'], 'Cancel', 'G-49', 'alt'],
+ [['G-52'], 'Second person added', 'G-53', 'main'], [['G-52', 'G-53'], 'Tick the statement, Submit registration', 'G-54', 'main'], [['G-53'], 'Remove a person', 'G-52', 'alt'],
+ [['G-54'], 'Go to your home page', 'G-55', 'main'],
+ [['G-55', 'G-58', 'G-61'], 'Claim status (locked)', 'G-56', 'alt'], [['G-55', 'G-58', 'G-61'], 'Chat assistant (locked)', 'G-57', 'alt'], [['G-56', 'G-57'], 'See verification status', 'G-55', 'main'],
+ [['G-55', 'G-61', 'G-62'], 'CQH doesn\'t accept the proof (C-25)', 'G-58', 'fx'], [['G-55', 'G-61', 'G-62'], 'CQH verifies (C-26)', 'G-63', 'fx'],
+ [['G-58', 'G-59'], 'Send new proof of role', 'G-60', 'main'], [['G-58'], 'Representatives', 'G-59', 'alt'], [['G-60'], 'Send to CQH', 'G-62', 'main'], [['G-61'], 'Representatives', 'G-62', 'alt'], [['G-62'], 'Home', 'G-61', 'alt'],
+ [['G-63'], 'Representatives', 'G-64', 'alt'], [['G-64'], 'Home', 'G-63', 'alt'], [['G-63'], 'Go to Claim status', 'OUT:Provider workspace', 'main'],
+ [['G-65'], 'Stay signed in', 'OUT:Same page', 'main'], [['G-65'], 'Sign out now', 'G-67', 'alt'], [['G-65'], 'Countdown ends', 'G-66', 'err'], [['G-66', 'G-67'], 'Sign in again', 'G-01', 'main'],
+ [['G-68'], 'Fills in the form', 'G-69', 'main'], [['G-69'], 'Create account', 'G-70', 'main'], [['G-70'], 'Correct app code', 'G-72', 'main'], [['G-70'], 'Wrong app code', 'G-71', 'err'], [['G-71'], 'Enter the current code', 'G-70', 'main'],
+ [['G-72'], 'Ticks the box', 'G-73', 'main'], [['G-73'], 'Finish and open AtlasIQ', 'OUT:External dashboards', 'main'], [['G-74'], 'Request a new invitation', 'OUT:Sender asked to resend (C-27)', 'alt'], [['G-74', 'G-68'], 'Back to sign in', 'G-01', 'alt'],
+ [['C-01'], 'Types a work email', 'C-02', 'main'], [['C-01', 'C-02'], 'Non-CQH address', 'C-03', 'err'], [['C-02'], 'Continue with CQH account', 'C-04', 'main'], [['C-03'], 'Go to provider and customer sign-in', 'G-01', 'alt'],
+ [['C-04'], 'Signed in at CQH, several programs', 'C-05', 'main'], [['C-04'], 'Signed in at CQH, one program', 'C-06', 'main'], [['C-04'], 'Signed in at CQH, no program', 'C-07', 'err'],
+ [['C-04'], 'Signed in at CQH, no AtlasIQ account', 'C-08', 'err'], [['C-04'], 'Signed in at CQH, account deactivated', 'C-09', 'err'], [['C-04'], 'Canceled or not finished at CQH', 'C-10', 'err'],
+ [['C-05'], 'Open workspace', 'OUT:Staff home (Pod Central)', 'main'], [['C-06'], 'Opens on its own', 'OUT:Staff home (Pod Central)', 'main'], [['C-07', 'C-05', 'C-06'], 'Sign out', 'C-13', 'alt'],
+ [['C-08', 'C-09', 'C-10'], 'Back to staff sign-in', 'C-01', 'alt'], [['C-10'], 'Try again', 'C-04', 'main'],
+ [['C-11'], 'Stay signed in', 'OUT:Same page', 'main'], [['C-11'], 'Countdown ends', 'C-12', 'err'], [['C-11'], 'Sign out now', 'C-13', 'alt'], [['C-12', 'C-13'], 'Sign in again', 'C-01', 'main'],
+ [['C-14'], 'Add a staff user (superuser)', 'C-15', 'main'], [['C-14'], 'Add a staff user (supervisor)', 'C-16', 'main'], [['C-14'], 'Row actions › Deactivate', 'C-17', 'alt'], [['C-15', 'C-16'], 'Add user / Cancel', 'C-14', 'main'],
+ [['C-15', 'C-16'], 'New colleague signs in', 'C-01', 'fx'], [['C-17'], 'Deactivate Sam', 'C-14', 'main'], [['C-17'], 'The person signs in again', 'C-09', 'fx'],
+ [['C-18'], 'Row actions › Suspend', 'C-19', 'alt'], [['C-18'], 'Restore', 'C-20', 'alt'], [['C-18'], 'Row actions › Close', 'C-21', 'alt'], [['C-18'], 'Open Denise Roy', 'C-22', 'alt'], [['C-18'], 'Review representative', 'C-24', 'main'],
+ [['C-19', 'C-20', 'C-21'], 'Confirm or Cancel', 'C-18', 'main'], [['C-19'], 'Agency\'s people try to sign in', 'G-15', 'fx'], [['C-21'], 'Agency\'s people try to sign in', 'G-16', 'fx'],
+ [['C-22'], 'Unlock account', 'C-23', 'main'], [['C-23'], 'Unlock account', 'C-22', 'main'], [['C-23'], 'The provider can sign in again', 'G-01', 'fx'],
+ [['C-24'], 'Verify representative', 'C-26', 'main'], [['C-24'], 'Don\'t accept', 'C-25', 'alt'], [['C-25'], 'Send decision: agency sees', 'G-58', 'fx'], [['C-26'], 'Agency sees', 'G-63', 'fx'],
+ [['C-27', 'C-29'], 'Invite someone', 'C-28', 'main'], [['C-28'], 'Send invitation', 'C-29', 'main'], [['C-28'], 'Invitee opens the email', 'G-68', 'fx'], [['C-28'], 'Invitee opens it after 7 days', 'G-74', 'fx'],
+ [['C-30'], 'Save changes', 'OUT:Same page; applies to every Guided sign-in', 'main']
+];
+
+const SCEN = [
+ {t: 'Provider signs in', who: 'pv', s: [['G-01', 'Opens AtlasIQ'], ['G-02', 'Enters email and password'], ['G-09', 'Asked for the app code'], ['G-10', 'Enters 6 digits'], ['G-63', 'Lands on home (fully verified agency)']]},
+ {t: 'Wrong password until locked, then reset', who: 'pv', s: [['G-05', 'Wrong password'], ['G-06', '4th try: 1 attempt left'], ['G-07', '5th try: locked'], ['G-25', 'Email me a password reset link'], ['G-26', 'Opens the link'], ['G-27', 'Confirmation doesn\'t match'], ['G-28', 'Fixed'], ['G-29', 'App code to finish']]},
+ {t: 'Phone not at hand: email code', who: 'pv', s: [['G-09', 'Code step'], ['G-17', 'Try another way'], ['G-18', 'Email code sent'], ['G-19', 'Typed the wrong code'], ['G-20', 'Waited too long'], ['G-18', 'Send a new code and verify']]},
+ {t: 'Phone lost: recovery code', who: 'pv', s: [['G-17', 'Try another way'], ['G-21', 'Recovery code'], ['G-22', 'Wrong or used code'], ['G-21', 'Correct code signs in']]},
+ {t: 'Too many wrong codes', who: 'pv', s: [['G-11', 'Wrong app code'], ['G-12', '5th wrong code: locked'], ['C-22', 'Admin sees the lock'], ['C-23', 'Admin unlocks']]},
+ {t: 'Password expired', who: 'pv', s: [['G-10', 'Correct code'], ['G-13', 'Password expired'], ['G-14', 'New password ready']]},
+ {t: 'Agency suspended, then restored', who: 'sv', s: [['C-19', 'Supervisor suspends with a reason'], ['G-15', 'Agency user tries to sign in'], ['C-20', 'Supervisor restores']]},
+ {t: 'New agency registers', who: 'pv', s: [['G-31', 'Step 1'], ['G-32', 'Stella suggests the enrolled name'], ['G-36', 'Step 2'], ['G-39', 'Step 3: email code'], ['G-42', 'Step 4: password'], ['G-45', 'Step 5: authenticator app'], ['G-47', 'Recovery codes'], ['G-49', 'Step 6'], ['G-50', 'Adds a representative'], ['G-53', 'Both named'], ['G-54', 'Submitted'], ['G-55', 'Home: in review']]},
+ {t: 'Registration problems', who: 'pv', s: [['G-34', 'No enrollment match'], ['G-35', 'Agency already registered'], ['G-38', 'Personal details need fixing'], ['G-40', 'Wrong email code'], ['G-46', 'Wrong app code'], ['G-51', 'Representative details need fixing']]},
+ {t: 'Representative not accepted, then verified', who: 'pv', s: [['G-55', 'In review'], ['C-24', 'Supervisor reviews'], ['C-25', 'Doesn\'t accept, with a reason'], ['G-58', 'Agency sees Action needed'], ['G-60', 'Sends new proof'], ['G-62', 'In review again'], ['C-26', 'Supervisor verifies'], ['G-63', 'Fully verified'], ['G-64', 'Representatives: verified']]},
+ {t: 'Customer or partner invited', who: 'cp', s: [['C-27', 'Admin opens Customers and partners'], ['C-28', 'Invites'], ['C-29', 'Invitation sent'], ['G-68', 'Accept invitation'], ['G-69', 'Ready'], ['G-70', 'Authenticator app'], ['G-72', 'Recovery codes'], ['G-73', 'Finish and open AtlasIQ']]},
+ {t: 'Invitation expired', who: 'cp', s: [['G-74', 'Opens the link after 7 days'], ['C-27', 'Admin resends']]},
+ {t: 'Staff member with several programs', who: 'st', s: [['C-01', 'Staff sign-in'], ['C-02', 'Work email'], ['C-04', 'Signs in at CQH'], ['C-05', 'Chooses where to work']]},
+ {t: 'Staff exceptions after CQH sign-in', who: 'st', s: [['C-06', 'One program'], ['C-07', 'No program'], ['C-08', 'Not set up in AtlasIQ'], ['C-09', 'Access has ended'], ['C-10', 'Sign-in not completed']]},
+ {t: 'Supervisor adds a colleague', who: 'sv', s: [['C-14', 'Staff accounts'], ['C-16', 'Supervisor view: superuser-only options off'], ['C-15', 'Superuser view'], ['C-01', 'Colleague signs in'], ['C-06', 'Workspace opens']]},
+ {t: 'Deactivating a staff member', who: 'su', s: [['C-14', 'Staff accounts'], ['C-17', 'Deactivate and move their work'], ['C-09', 'They try to sign in']]},
+ {t: 'Wrong sign-in page', who: 'pv', s: [['G-08', 'Staff address on the provider page'], ['C-01', 'Sent to staff sign-in'], ['C-03', 'Provider address on the staff page'], ['G-01', 'Sent to provider sign-in']]},
+ {t: 'Session timeout', who: 'pv', s: [['G-65', 'Provider warned'], ['G-66', 'Signed out'], ['C-11', 'Staff warned'], ['C-12', 'Staff signed out']]}
+];
+
+/* open points. codes = screens they affect */
+const CLAR = [
+ [1, 'differs', 'Two sign-in pages', 'SRS 3.1.1 says "All users sign in at the same place." The design has a Guided page and a staff page that redirect each other. Agreed in review; CQH to confirm.', ['G-01', 'G-08', 'C-01', 'C-03'], ['3.1.1']],
+ [2, 'confirm', 'How customers and partners sign in (Q-010)', 'Designed with an AtlasIQ password and authenticator app; their organization\'s own sign-in is shown but off.', ['C-28', 'G-68'], ['3.1.9', 'Q-010']],
+ [3, 'confirm', 'Staff identity provider', 'Shown as Microsoft Entra ID; staff recognized by @cqh.org. SRS 6.1.4 says it must be confirmed.', ['C-01', 'C-04'], ['6.1.4']],
+ [4, 'confirm', 'Rule values are placeholders', '12 characters, 90-day change, last 5, lock after 5 for 15 minutes, link 30 minutes, codes 10 minutes, resend 45 seconds, invitation 7 days, idle 15 minutes with a 2-minute warning, 10 recovery codes. No SRS gives these numbers.', ['C-30', 'G-07', 'G-13', 'G-65'], ['3.1.2']],
+ [5, 'confirm', 'Email code as a backup', 'An email code is only as secure as the mailbox. CQH security to confirm.', ['G-17', 'G-18'], ['6.1.2']],
+ [6, 'confirm', 'Number of representatives', 'Up to 2, per D-14 (two by default, configurable per contract).', ['G-49', 'G-53'], ['3.6.3', 'D-14']],
+ [7, 'confirm', 'Fax numbers optional', 'Agency and representative fax are optional because Milestone 2 letters go through the portal. The individual CAS-171 and CAS-176 texts weren\'t in the files provided.', ['G-31', 'G-50'], ['3.6.1', '3.6.3']],
+ [8, 'differs', 'Staff landing page', 'SRS 3.2.1 (CAS-019, CAS-021): after login each user lands on Pod Central. C-05 adds a program choice first for staff in several programs. Kept as a design decision for CQH to confirm.', ['C-05', 'C-06', 'C-07'], ['3.2.1']],
+ [9, 'gap', 'Registrant as representative', 'The owner checkbox in step 2 doesn\'t prefill step 6; the registrant retypes their details. Proposed, not approved: list them as representative 1 with only proof of role to add.', ['G-37', 'G-49', 'G-50'], ['3.6.3']],
+ [10, 'gap', 'Order of account checks', 'Not defined for combined conditions. Prototype order: locked, password, suspended or closed, code, expired.', ['G-07', 'G-13', 'G-15', 'G-16'], []],
+ [11, 'gap', 'Customers and partners: suspended or closed', 'G-15 and G-16 speak about an agency; no customer or partner versions and no admin action to suspend one.', ['G-15', 'G-16', 'C-27'], ['3.1.9']],
+ [12, 'gap', 'Adding users to an existing agency', 'G-35 says "Ask them to add you as a user", but no screen lets a provider add a colleague.', ['G-35', 'C-18'], ['3.1.4']],
+ [13, 'gap', 'Registering again after closure', 'G-16 and C-21 say the agency would need to register again, but G-35 blocks a registered NPI.', ['G-16', 'G-35', 'C-21'], ['3.1.3']],
+ [14, 'gap', 'Resetting two-step verification', 'Support process (G-12, G-17), the C-22 reset dialog and the "other option" for people without a smartphone (G-45) aren\'t designed.', ['G-12', 'G-17', 'G-45', 'C-22'], ['3.1.2']],
+ [15, 'gap', 'New recovery codes', 'G-21 says a new set can be made from the profile, which isn\'t designed.', ['G-21', 'G-47'], ['3.1.2']],
+ [16, 'gap', 'Save-time password failures', 'No message for a breached or reused password on save.', ['G-13', 'G-26', 'G-42', 'G-68'], ['3.1.2']],
+ [17, 'gap', 'Code and link lifetimes', 'Whether a newer code or link invalidates older ones, and whether wrong codes in registration or invitation setup are limited.', ['G-18', 'G-25', 'G-39', 'G-45', 'G-70'], []],
+ [18, 'gap', 'Changing representatives later', '"Name a different representative" (G-58) and "Add a representative" (G-64) have no form, while G-53 says "To change who is named later, please contact support." Whether a new person must be verified first isn\'t defined.', ['G-58', 'G-64'], ['3.6.3']],
+ [19, 'gap', 'Staff session rules', 'C-30 says staff follow CQH\'s identity provider rules, but C-11 and C-12 use the 15-minute AtlasIQ rule.', ['C-11', 'C-12'], []],
+ [20, 'gap', 'C-10 wording', '"Closed or canceled": closing a same-tab CQH sign-in never returns to AtlasIQ. Suggested: "canceled or didn\'t finish in time".', ['C-10'], []],
+ [21, 'gap', 'Admin follow-ups not drawn', 'Email Priya Shah (C-07, C-08), Remind Nina and Reassign Sam\'s reviews (C-14), the reassign step (C-17), Send password reset (C-22).', ['C-07', 'C-08', 'C-14', 'C-17', 'C-22'], []],
+ [22, 'gap', 'Who can change Sign-in rules', 'Designed for superusers (Roles & Access: the Superuser "sets password rules"), but the supervisor menu on C-24 also lists Sign-in rules.', ['C-30', 'C-24'], ['3.1.2']],
+ [23, 'gap', 'Admin form validation', 'Errors for Add a staff user, Invite a customer or partner and Sign-in rules value ranges aren\'t designed.', ['C-15', 'C-28', 'C-30'], []],
+ [24, 'gap', 'Used invitation links', 'Whether an accepted invitation link shows G-74 or goes to Sign in.', ['G-74'], []],
+ [25, 'gap', 'System errors', 'Network or server errors, emails that fail to send, the identity provider being down and maintenance mode (announced on C-01) have no screens.', ['C-01', 'G-01'], ['3.1.8']],
+ [26, 'gap', 'Unsaved work on timeout', 'G-66 promises only saved work survives; provider autosave isn\'t defined. No SRS states an idle timeout.', ['G-65', 'G-66', 'C-12'], []],
+ [27, 'gap', 'Supervisor limits not stated in the SRS', 'C-16 stops supervisors giving the Superuser role or Export. The SRS doesn\'t say this; Roles & Access lists Supervisor access as view/upload/download (no Export). Decided in review on Nov 21; confirm with CQH.', ['C-16'], ['3.1.3', '6.1.3']]
+];
+const RULES = [['Minimum password length', '12 characters'], ['Must include', 'Upper and lower case, a number, a symbol'], ['Breach check', 'Always on, when saving'], ['Password change', 'Every 90 days (0 = off)'], ['Reuse', 'Last 5 blocked'], ['Lockout', '5 wrong tries, passwords and codes counted separately'], ['Unlock', 'After 15 minutes'], ['Reset link', 'Once, 30 minutes'], ['Codes', '10 minutes'], ['Resend wait', '45 seconds'], ['Invitation', '7 days'], ['Idle sign-out', '15 minutes, warning at 13'], ['Recovery codes', '10 per person'], ['Representatives', 'Up to 2 (D-14)']];
+
+/* ---------- indexes ---------- */
+const ST = {}; STATES.forEach((s, i) => { s.i = i; ST[s.c] = s; });
+const BYID = {}; STATES.forEach(s => { (BYID[s.id] = BYID[s.id] || []).push(s.c); });
+const OUT = {}, IN = {};
+EDGES.forEach(([from, label, to, kind]) => from.forEach(f => {
+  (OUT[f] = OUT[f] || []).push({label, to, kind});
+  if (!to.startsWith('OUT:')) (IN[to] = IN[to] || []).push({label, from: f, kind});
+}));
+const CLAR_BY = {}; CLAR.forEach(q => q[4].forEach(c => { (CLAR_BY[c] = CLAR_BY[c] || []).push(q[0]); }));
+const REQ_SCREENS = {}; Object.entries(SCR).forEach(([id, s]) => (s.srs || []).forEach(([r]) => { (REQ_SCREENS[r] = REQ_SCREENS[r] || []).push(id); }));
+const SEC = {prov: 'Providers', cust: 'Customers and partners', staff: 'CQH staff', admin: 'Access administration'};
+const FLOWS = []; STATES.forEach(s => { let f = FLOWS.find(x => x.f === s.f); if (!f) FLOWS.push(f = {f: s.f, sec: s.sec, codes: []}); f.codes.push(s.c); });
+
+/* ---------- helpers ---------- */
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const $ = (s, el = document) => el.querySelector(s);
+const ICON = {
+  arrow: '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  back: '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4.5 4 8l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  warn: '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.5 2"/><path d="M8 5v3.5M8 10.8v.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  ext: '<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3 7 9M11 9v4H3V5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+const KIND = {main: 'Main path', alt: 'Alternate', err: 'Error or exception', fx: 'Effect on another user'};
+const QK = {differs: ['Differs from the SRS', 'd'], confirm: ['To confirm with CQH', 'c'], gap: ['Needs Clarification', '']};
+const tag = k => `<span class="tag ${k === 'err' ? 'exc' : k}">${KIND[k]}</span>`;
+const role = r => USERS[r] ? `<span class="role ${r}"><i aria-hidden="true"></i>${esc(USERS[r].name)}</span>` : '';
+const chip = c => ST[c] ? `<a class="cchip${c[0] === 'G' ? ' g' : ''}" href="#${c}" title="${esc(ST[c].t + ' · ' + ST[c].n)}">${c}</a>` : '';
+const chipBig = c => { const s = ST[c]; if (!s) return ''; return `<a class="scr${c[0] === 'G' ? ' g' : ''}" href="#${c}" style="text-decoration:none"><img src="t/${c}.webp" alt="" loading="lazy" width="46" height="30"><code>${c}</code><span>${esc(s.n)}</span></a>`; };
+const target = to => to.startsWith('OUT:') ? `<span class="out-txt">${esc(to.slice(4))} (outside Sign-in and Access)</span>` : chipBig(to);
+const rid = r => 'req-' + String(r).replace(/\./g, '-');
+const reqLink = r => `<a class="req-id" href="#${rid(r)}" style="text-decoration:none">${esc(r)}</a>`;
+
+/* ---------- flow diagrams (overview) ---------- */
+let FLOWN = 0;
+function flowSvg(title, rows) {
+  const mk = 'fa' + (++FLOWN);
+  const cx = 142, R = 316, RW = 420; let y = 56, o = '', con = '';
+  const ink = 'var(--fg)', quiet = 'var(--muted)', edge = 'var(--line-strong)', acc = 'var(--accent)';
+  rows.forEach((r, i) => {
+    const h = r.dia ? 68 : (r.end ? 56 : 52), top = y, mid = y + h / 2;
+    if (i) con += `<path d="M${cx} ${top - 26}V${top}" marker-end="url(#${mk})"/>`;
+    const lab = r.dia ? `<text x="${cx}" y="${mid + (r.dia[1] ? -4 : 5)}" text-anchor="middle" font-size="13" fill="${ink}">${esc(r.dia[0])}</text>${r.dia[1] ? `<text x="${cx}" y="${mid + 12}" text-anchor="middle" font-size="13" fill="${ink}">${esc(r.dia[1])}</text>` : ''}` :
+      `<text x="${cx}" y="${mid - 2}" text-anchor="middle" font-size="13" font-weight="600" fill="${ink}">${esc(r.t)}</text><text x="${cx}" y="${mid + 15}" text-anchor="middle" font-size="11.5" fill="${r.end ? ink : quiet}">${esc(r.s)}</text>`;
+    const shape = r.dia ? `<polygon points="${cx},${top} ${cx + 104},${mid} ${cx},${top + h} ${cx - 104},${mid}" fill="var(--surface)" stroke="${edge}" stroke-width="1.25"/>` :
+      `<rect x="24" y="${top}" width="236" height="${h}" rx="8" fill="${r.end ? 'var(--t-sv)' : 'var(--surface)'}" stroke="${r.end ? acc : edge}" stroke-width="${r.end ? 2 : 1.25}"/>`;
+    o += r.code ? `<a href="#${r.code}" aria-label="${esc((r.t || r.dia.join(' ')) + ', open ' + r.code)}">${shape}${lab}</a>` : `<g>${shape}${lab}</g>`;
+    if (r.n) {
+      const ny = mid - 22, xs = r.dia ? cx + 104 : 260;
+      con += `<path d="M${xs} ${mid}H${R}" marker-end="url(#${mk})"/>`;
+      if (r.lab) o += `<text x="${(xs + R) / 2}" y="${mid - 8}" text-anchor="middle" font-size="11.5" fill="${quiet}">${esc(r.lab)}</text>`;
+      o += `<a href="#${r.n[2]}" aria-label="${esc(r.n[0] + ', open ' + r.n[2])}"><rect x="${R}" y="${ny}" width="${RW}" height="44" rx="8" fill="var(--surface)" stroke="${edge}" stroke-width="1.25"/><text x="${R + 14}" y="${ny + 19}" font-size="13" font-weight="600" fill="${ink}">${esc(r.n[0])}</text><text x="${R + 14}" y="${ny + 35}" font-size="11.5" fill="${quiet}">${esc(r.n[1])}</text></a>`;
+    }
+    if (i < rows.length - 1 && r.dn) o += `<text x="${cx + 8}" y="${top + h + 17}" font-size="11.5" fill="${quiet}">${esc(r.dn)}</text>`;
+    y = top + h + 26;
+  });
+  const H = y + 4;
+  return `<svg class="flowsvg" viewBox="0 0 760 ${H}" role="group" aria-label="${esc(title)}"><defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs><text x="24" y="30" font-size="15" font-weight="600" fill="${ink}">${esc(title)}</text><g fill="none" stroke="var(--muted)" stroke-width="1.25">${con}</g>${o}</svg>`;
+}
+const FLOW_G = [
+  {t: 'Sign in', s: 'G-01', code: 'G-01', n: ['Staff address (@cqh.org): G-08', 'Sends them to Staff sign-in (C-01)', 'G-08']},
+  {dia: ['Email and password', 'correct?'], code: 'G-05', n: ['No: G-05, or G-06 with 1 attempt left', '5th wrong password, or any try while locked: G-07', 'G-05'], lab: 'no', dn: 'yes'},
+  {dia: ['Agency suspended', 'or closed?'], code: 'G-15', n: ['Yes: G-15 (suspended) or G-16 (closed)', 'The person can only contact CQH provider support', 'G-15'], lab: 'yes', dn: 'no'},
+  {t: 'Verification code', s: 'G-09, authenticator app', code: 'G-09', n: ['Try another way (G-17)', 'Email code (G-18) or recovery code (G-21), then back here', 'G-17']},
+  {dia: ['Code correct?'], code: 'G-11', n: ['No: G-11, G-19, G-20 or G-22', '5th wrong code locks the account (G-12)', 'G-11'], lab: 'no', dn: 'yes'},
+  {dia: ['Password older', 'than 90 days?'], code: 'G-13', n: ['Yes: Password expired (G-13, G-14)', 'Save a new password, then continue', 'G-13'], lab: 'yes', dn: 'no'},
+  {t: 'Signed in', s: 'Home or External dashboards', code: 'G-55', end: true}
+];
+const FLOW_C = [
+  {t: 'Staff sign-in', s: 'C-01, C-02', code: 'C-01', n: ['No CQH address: C-03', 'Sends them to provider and customer sign-in (G-01)', 'C-03']},
+  {t: 'CQH sign-in', s: 'C-04, outside AtlasIQ', code: 'C-04', n: ['Canceled or not finished: C-10', 'Try again returns to CQH sign-in (C-04)', 'C-10']},
+  {dia: ['AtlasIQ account', 'active?'], code: 'C-08', n: ['No account: C-08 · Deactivated: C-09', 'An admin adds or restores them in Staff accounts', 'C-08'], lab: 'no', dn: 'yes'},
+  {dia: ['How many', 'programs?'], code: 'C-07', n: ['None: C-07 · One: C-06 opens it on its own', 'Two or more: Choose where to work (C-05)', 'C-07'], lab: '0 or 1'},
+  {t: 'Choose where to work', s: 'C-05, skipped if remembered', code: 'C-05'},
+  {t: 'Staff home (Pod Central)', s: 'Outside Sign-in and Access', end: true}
+];
+
+/* ---------- overview ---------- */
+function viewOverview() {
+  const nG = STATES.filter(s => s.c[0] === 'G').length;
+  return `<div class="view">
+  <section class="hero"><p class="eyebrow">AtlasIQ · Sign-in and Access</p><h1 class="h1">Every sign-in and access screen, what it does, and the requirement behind it</h1>
+    <p class="lede">Open any of the ${STATES.length} states to see the real design, when it appears, what each action does, where it leads, and the exact SRS text it traces to. Anything not settled is marked.</p>
+    <div class="facts"><div class="fact"><b>${STATES.length}</b><span>states on ${Object.keys(SCR).length} screens</span></div><div class="fact"><b>${nG}</b><span>Guided: providers, customers, partners</span></div><div class="fact"><b>${STATES.length - nG}</b><span>Copilot: CQH staff and admin</span></div><div class="fact"><b>${CLAR.length}</b><span>open points</span></div></div>
+    <div class="row" style="margin-top:6px"><a class="btn pri" href="#G-01">Open the screen explorer${ICON.arrow}</a><a class="btn sec" href="#scenarios">Walk through a scenario</a><a class="btn sec" href="#requirements">Trace by SRS ID</a></div>
+  </section>
+  <section class="grid"><div class="sec-head"><h2 class="h2">Who signs in, and how</h2></div>
+    <div class="tbl"><table><thead><tr><th>User</th><th>How they get an account</th><th>How they sign in</th><th>Entry screen</th><th>SRS</th></tr></thead><tbody>
+    <tr><td>${role('pv')}</td><td>Register the agency themselves</td><td>AtlasIQ email and password, then an authenticator app code</td><td>${chip('G-01')} · registration ${chip('G-31')}</td><td>${reqLink('3.1.4')} ${reqLink('3.1.1')} ${reqLink('6.1.2')}</td></tr>
+    <tr><td>${role('cp')}</td><td>Invited by a supervisor or superuser</td><td>Same as providers (method open under Q-010)</td><td>${chip('G-01')} · invitation ${chip('G-68')}</td><td>${reqLink('3.1.9')} ${reqLink('Q-010')}</td></tr>
+    <tr><td>${role('st')}</td><td>Added in Staff accounts</td><td>CQH work account through CQH's identity provider; AtlasIQ never sees the password</td><td>${chip('C-01')}</td><td>${reqLink('3.1.3')} ${reqLink('6.1.4')}</td></tr>
+    <tr><td>${role('sv')} ${role('su')}</td><td>As staff</td><td>As staff; plus access administration</td><td>${chip('C-14')} ${chip('C-18')} ${chip('C-27')} ${chip('C-30')}</td><td>${reqLink('3.1.3')} ${reqLink('6.1.3')}</td></tr>
+    </tbody></table></div>
+    <p class="small muted">Two-step verification: providers, customers and partners set up an authenticator app only (registration step 5, invitation step 2). At sign-in, Try another way also offers an email code or a recovery code. No text messages. Staff use CQH's own MFA.</p>
+  </section>
+  <section class="grid" style="gap:28px">
+    <div class="grid"><div class="sec-head"><h2 class="h2">Sign-in decisions: Guided</h2><p class="muted">Select any box to open that screen.</p></div><div class="fwrap">${flowSvg('Every Guided sign-in passes the same checks', FLOW_G)}</div></div>
+    <div class="grid"><div class="sec-head"><h2 class="h2">Sign-in decisions: staff</h2><p class="muted">AtlasIQ checks the account only after CQH signs the person in.</p></div><div class="fwrap">${flowSvg('CQH signs staff in, then AtlasIQ checks access', FLOW_C)}</div></div>
+  </section>
+  <section class="grid"><div class="sec-head"><h2 class="h2">The 13 journeys</h2><p class="muted">Every state in Figma order. Select a code to open it.</p></div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(360px,1fr))">${FLOWS.map(f => `<div class="jr"><span class="eyebrow">${esc(SEC[f.sec])}</span><h3>${esc(f.f)}</h3><div class="chipline">${f.codes.map(chip).join('')}</div></div>`).join('')}</div>
+  </section>
+  <section class="grid"><div class="sec-head"><h2 class="h2">Rule values in the design</h2><p class="muted">From Sign-in rules (${chip('C-30')}). All are placeholders until CQH security confirms them (open point 4).</p></div>
+    <div class="tbl"><table><tbody>${RULES.map(([k, v]) => `<tr><td style="width:40%"><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join('')}</tbody></table></div>
+  </section></div>`;
+}
+
+/* ---------- explorer ---------- */
+let ZOP = null;
+let CUR = 'G-01', TAB = 'beh', LQ = '', LF = '';
+const FILTERS = [['', 'All'], ['pv', 'Provider'], ['cp', 'Customer or partner'], ['st', 'Staff'], ['adm', 'Admin']];
+function inFilter(s) {
+  if (!LF) return true; const w = SCR[s.id].who;
+  if (LF === 'adm') return s.sec === 'admin';
+  if (LF === 'st') return s.sec === 'staff';
+  return w.includes(LF);
+}
+function listHtml() {
+  const q = LQ.trim().toLowerCase();
+  return FLOWS.map(f => {
+    const L = f.codes.map(c => ST[c]).filter(s => inFilter(s) && (!q || (s.c + ' ' + s.t + ' ' + s.n).toLowerCase().includes(q)));
+    if (!L.length) return '';
+    let last = '', body = '';
+    L.forEach(s => { if (s.t !== last) { body += `<div class="scr-t">${esc(s.t)}</div>`; last = s.t; } body += `<button type="button" class="st" data-go="${s.c}"${s.c === CUR ? ' aria-current="true"' : ''}><code>${s.c}</code><span>${esc(s.n)}</span></button>`; });
+    return `<details open><summary>${esc(f.f)}</summary>${body}</details>`;
+  }).join('') || '<p class="small muted">No states match.</p>';
+}
+function behHtml(s, d) {
+  const h = s.h || ['', []];
+  return `<div class="statebox"><span class="eyebrow">This state: ${esc(s.n)}</span><p>${esc(h[0])}</p>${h[1] && h[1].length ? `<ol style="margin:0;padding-left:20px;display:grid;gap:3px;font-size:14px">${h[1].map(x => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}</div>
+  <div class="blk"><h2 class="bh">Purpose</h2><p>${esc(d.purpose)}</p></div>
+  <div class="blk"><h2 class="bh">Who can see it</h2><div class="row">${d.who.map(role).join('')}</div></div>
+  <div class="blk"><h2 class="bh">When it appears</h2><p>${esc(d.when)}</p></div>
+  ${d.cond.length ? `<div class="blk"><h2 class="bh">Display conditions</h2><ul>${d.cond.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
+  <div class="blk"><h2 class="bh">User actions</h2><ul>${d.actions.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+  <div class="blk"><h2 class="bh">On success</h2><p>${esc(d.success)}</p></div>
+  <div class="blk"><h2 class="bh">Errors and alternatives</h2><ul>${d.failure.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+  ${d.notes.length ? `<div class="blk"><h2 class="bh">Developer notes</h2><ul>${d.notes.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
+  ${(d.dec || []).map(x => `<p class="warn c">${ICON.warn}<span><b>Design decision (review):</b> ${esc(x)}</span></p>`).join('')}`;
+}
+function navHtml(s) {
+  const out = OUT[s.c] || [], inn = IN[s.c] || [], sib = BYID[s.id].filter(c => c !== s.c);
+  return `<div class="blk"><h2 class="bh">What happens next (${out.length})</h2>${out.length ? `<ul class="edges">${out.map(e => `<li class="${e.kind}"><span class="lab">${esc(e.label)} ${tag(e.kind)}</span>${target(e.to)}</li>`).join('')}</ul>` : '<p class="small muted">No onward action from this state.</p>'}</div>
+  <div class="blk"><h2 class="bh">How people get here (${inn.length})</h2>${inn.length ? `<ul class="edges">${inn.map(e => `<li class="${e.kind}"><span class="lab">${esc(e.label)} ${tag(e.kind)}</span>${chipBig(e.from)}</li>`).join('')}</ul>` : '<p class="small muted">Entry point: opened directly (URL, email link or menu).</p>'}</div>
+  ${sib.length ? `<div class="blk"><h2 class="bh">Other states of "${esc(s.t)}"</h2><div class="chipline">${sib.map(chip).join('')}</div></div>` : ''}
+  <div class="blk"><h2 class="bh">Journey</h2><p class="small">${esc(s.f)}</p><div class="chipline">${FLOWS.find(f => f.f === s.f).codes.map(c => c === s.c ? `<span class="cchip" style="background:var(--accent);color:var(--accent-ink);border-color:var(--accent)">${c}</span>` : chip(c)).join('')}</div></div>`;
+}
+function reqCard(r, how) {
+  const q = SRS[r]; if (!q) return '';
+  return `<div class="req"><div class="req-h">${reqLink(r)}<b>${esc(q.t)}</b></div>${how ? `<p><b>How this screen meets it:</b> ${esc(how)}</p>` : ''}<blockquote>${esc(q.x)}</blockquote>
+  <div class="meta">${q.a ? `<span>Actors: ${esc(q.a)}</span>` : ''}${q.src ? `<span>Source requirement IDs: ${esc(q.src)}</span>` : ''}${SCOPE_ID[r] ? `<span>Final Scope sheet: feature ${esc(SCOPE_ID[r])}, screen "${esc(SCOPE_SCREEN[r])}"</span>` : ''}<span>Source: <a href="#doc-srs">${esc(DOCS.srs.name)}</a>${SCOPE_ID[r] ? ` · <a href="#doc-scope">Final Scope sheet</a>` : ''}</span></div></div>`;
+}
+function reqHtml(s, d) {
+  return `${(d.srs || []).map(([r, how]) => reqCard(r, how)).join('')}
+  ${d.nosrs ? `<p class="warn">${ICON.warn}<span><b>Needs Clarification:</b> ${esc(d.nosrs)}</span></p>` : ''}
+  ${d.roles ? `<div class="req"><div class="req-h"><span class="req-id">Roles &amp; Access</span><b>Accounts area</b></div><p>${esc(d.roles)}</p><div class="meta"><span>Superuser: ${esc(ROLES_ACCT.SU)}</span><span>Supervisor: ${esc(ROLES_ACCT.SV)}</span><span>Source: <a href="#doc-roles">${esc(DOCS.roles.name)}</a></span></div></div>` : ''}
+  <p class="small muted">Requirement text is quoted from the SRS (UK spelling kept as written).</p>`;
+}
+function copyBtn(text) { return `<button type="button" class="btn sec mini" data-copy="${esc(text)}">Copy</button>`; }
+function srcHtml(s, d) {
+  const base = s.fr;
+  return `<div class="blk"><h2 class="bh">Figma frames</h2><p class="small muted">File: ${esc(DOCS.figma.file)}. Page: <b>${esc(s.pg)}</b>.</p>
+    <div class="copyrow"><p class="frame">${esc(base)} · Light</p>${copyBtn(base + ' · Light')}</div><div class="copyrow"><p class="frame">${esc(base)} · Dark</p>${copyBtn(base + ' · Dark')}</div>
+    <p class="small muted">No shareable Figma link was provided, so frames are referenced by exact name: paste it into Figma's layer search.</p></div>
+  <div class="blk"><h2 class="bh">Live prototype</h2><p class="small">Path in the prototype: <code>${esc(s.p || 'not defined')}</code></p><a class="btn sec mini" href="${DOCS.proto.url}" target="_blank" rel="noopener">Open the Sign-in and Access prototype ${ICON.ext}</a></div>
+  <div class="blk"><h2 class="bh">Requirement sources</h2><ul>${(d.srs || []).map(([r]) => `<li>${reqLink(r)} in <a href="#doc-srs">${esc(DOCS.srs.name)}</a>${SCOPE_ID[r] ? `; Final Scope feature ${esc(SCOPE_ID[r])}` : ''}</li>`).join('') || '<li>None mapped (see Requirements tab)</li>'}${d.roles ? `<li><a href="#doc-roles">${esc(DOCS.roles.name)}</a>, Accounts area</li>` : ''}${d.dec ? `<li><a href="#doc-review">${esc(DOCS.review.name)}</a></li>` : ''}</ul></div>
+  <div class="blk"><h2 class="bh">Written guide</h2><a class="btn sec mini" href="${DOCS.guide.url}" target="_blank" rel="noopener">Open the Developer Implementation Guide ${ICON.ext}</a></div>`;
+}
+function clarHtml(s) {
+  const L = (CLAR_BY[s.c] || []).map(n => CLAR.find(q => q[0] === n));
+  return L.length ? L.map(q => `<div class="warn ${QK[q[1]][1]}">${ICON.warn}<span><b>${q[0]}. ${esc(QK[q[1]][0])}: ${esc(q[2])}.</b> ${esc(q[3])} ${q[5].map(reqLink).join(' ')} <a href="#q-${q[0]}">See all open points</a></span></div>`).join('') :
+    '<p class="small muted">No open points recorded for this state. Screen-level points may still apply; see the other states of this screen.</p>';
+}
+function panelHtml(s) {
+  const d = SCR[s.id];
+  return {beh: behHtml, nav: navHtml, req: reqHtml, src: srcHtml, clar: clarHtml}[TAB](s, d);
+}
+function viewExplorer(c) {
+  CUR = ST[c] ? c : 'G-01'; const s = ST[CUR], d = SCR[s.id], prev = STATES[s.i - 1], next = STATES[s.i + 1];
+  const nq = (CLAR_BY[s.c] || []).length, nr = (d.srs || []).length;
+  const tabs = [['beh', 'Behavior'], ['nav', 'Navigation'], ['req', `Requirements<em>${nr || '!'}</em>`], ['src', 'Sources'], ['clar', `Open points<em>${nq}</em>`]];
+  return `<div class="ex"><nav class="ex-list" aria-label="All states"><label class="sr" for="lq">Search states</label><input id="lq" type="search" placeholder="Search code or name, e.g. G-17" value="${esc(LQ)}">
+    <div class="filters" role="group" aria-label="Show states for">${FILTERS.map(([k, t]) => `<button type="button" class="chip" data-lf="${k}" aria-pressed="${LF === k}">${t}</button>`).join('')}</div>
+    <div id="lbody">${listHtml()}</div></nav>
+  <article class="ex-main" aria-labelledby="ex-t"><div class="ex-head"><div style="display:grid;gap:4px"><span class="eyebrow">${esc(SEC[s.sec])} · ${esc(s.f)}</span><h1 id="ex-t"><code style="font-size:.8em">${s.c}</code> ${esc(s.t)}</h1><span class="sub">${esc(s.n)}</span></div>
+    <div class="row"><a class="btn sec" aria-label="${prev ? 'Previous state, ' + prev.c : 'No previous state'}" href="#${prev ? prev.c : s.c}"${prev ? '' : ' aria-disabled="true" tabindex="-1" style="opacity:.45"'}>${ICON.back}${prev ? prev.c : ''}</a><a class="btn sec" aria-label="${next ? 'Next state, ' + next.c : 'No next state'}" href="#${next ? next.c : s.c}"${next ? '' : ' aria-disabled="true" tabindex="-1" style="opacity:.45"'}>${next ? next.c : ''}${ICON.arrow}</a></div></div>
+  <div class="ex-body"><div><div class="shot-tools"><span class="small muted">Design: ${s.w} px wide, light mode</span><button type="button" class="btn sec mini" data-zoom="${s.c}">View full size</button></div><div class="ex-shot" tabindex="0" aria-label="Design of ${s.c}, scrolls"><img src="s/${s.c}.webp" alt="Design of ${s.c}: ${esc(s.t)}, ${esc(s.n)}" width="${s.w}" height="${s.ht}"></div></div>
+  <div><div class="tabs2" role="tablist" aria-label="Details">${tabs.map(([k, t]) => `<button type="button" role="tab" id="tab-${k}" aria-controls="panel" aria-selected="${TAB === k}" tabindex="${TAB === k ? 0 : -1}" data-tab="${k}">${t}</button>`).join('')}</div>
+  <div class="panel" id="panel" role="tabpanel" aria-labelledby="tab-${TAB}">${panelHtml(s)}</div></div></div>
+  <p class="small muted">Tip: the left and right arrow keys move between states when the page has focus.</p></article></div>`;
+}
+
+/* ---------- scenarios ---------- */
+let SI = 0, SJ = 0;
+function viewScenarios() {
+  const sc = SCEN[SI], [c, cap] = sc.s[SJ], s = ST[c];
+  return `<div class="view" style="gap:20px"><header class="sec-head"><p class="eyebrow">Scenarios</p><h1 class="h1">Walk through a real situation</h1><p class="lede">Each scenario strings together the states someone actually sees, including the admin screens that change what they see.</p></header>
+  <div class="scn"><ul class="scn-list" aria-label="Scenarios">${SCEN.map((x, i) => `<li><button type="button" data-si="${i}"${i === SI ? ' aria-current="true"' : ''}>${esc(x.t)}</button></li>`).join('')}</ul>
+  <article class="ex-main" aria-labelledby="sc-t"><div class="row">${role(sc.who)}<span class="small muted">${sc.s.length} steps</span></div><h2 class="h2" id="sc-t">${esc(sc.t)}</h2>
+  <div class="steps" role="group" aria-label="Steps">${sc.s.map(([cc, t], j) => `<button type="button" data-sj="${j}"${j === SJ ? ' aria-current="true"' : ''}><b>${j + 1}</b>${cc}</button>`).join('')}</div>
+  <div class="statebox"><span class="eyebrow">Step ${SJ + 1}: ${c} · ${esc(s.t)}</span><p style="font-size:17px">${esc(cap)}</p><p class="small">${esc(s.n)}. ${esc((s.h || [''])[0])}</p><div class="row"><a class="btn pri mini" href="#${c}">Open ${c} in the explorer${ICON.arrow}</a></div></div>
+  <div class="ex-shot" style="position:static;max-height:70vh" tabindex="0" aria-label="Design of ${c}"><img src="s/${c}.webp" alt="Design of ${c}: ${esc(s.t)}, ${esc(s.n)}" width="${s.w}" height="${s.ht}"></div>
+  <nav class="fl-nav"><button type="button" class="btn sec" data-sj="${SJ - 1}"${SJ ? '' : ' disabled'}>${ICON.back}Previous</button><button type="button" class="btn pri" data-sj="${SJ + 1}"${SJ < sc.s.length - 1 ? '' : ' disabled'}>Next${ICON.arrow}</button></nav></article></div></div>`;
+}
+
+/* ---------- requirements ---------- */
+function viewReqs() {
+  const order = ['3.1.1', '3.1.2', '3.1.3', '3.1.4', '3.1.5', '3.1.6', '3.1.8', '3.1.9', '3.2.1', '3.2.4', '3.6.1', '3.6.3', '3.14.8', '6.1.2', '6.1.3', '6.1.4', '6.1.5', 'D-14', 'Q-010'];
+  const noReq = Object.entries(SCR).filter(([, d]) => d.nosrs);
+  return `<div class="view"><header class="sec-head"><p class="eyebrow">Traceability</p><h1 class="h1">Requirements and the screens that meet them</h1><p class="lede">Every SRS item used by Sign-in and Access, quoted from the SRS, with its Final Scope feature and every screen mapped to it.</p></header>
+  <div class="grid">${order.map(r => { const ids = REQ_SCREENS[r] || []; const codes = ids.flatMap(id => BYID[id]); return `<div class="req" id="${rid(r)}" style="scroll-margin-top:90px">${reqCard(r, '').replace('<div class="req">', '').replace(/<\/div>$/, '')}<div class="blk"><h2 class="bh">Screens (${ids.length}) and states (${codes.length})</h2><div class="chipline">${ids.map(id => `<span class="small" style="margin-right:4px"><b>${esc(ST[BYID[id][0]].t)}</b></span>${BYID[id].map(chip).join('')}<span class="sep">·</span>`).join('')}</div></div></div>`; }).join('')}</div>
+  <section class="grid"><h2 class="h2">Screens with no SRS requirement</h2><p class="muted">Marked Needs Clarification on each screen.</p><div class="grid">${noReq.map(([id, d]) => `<p class="warn">${ICON.warn}<span><b>${esc(ST[BYID[id][0]].t)}</b> ${BYID[id].map(chip).join(' ')}: ${esc(d.nosrs)}</span></p>`).join('')}</div></section></div>`;
+}
+
+/* ---------- questions and sources ---------- */
+function viewQuestions() {
+  return `<div class="view"><header class="sec-head"><p class="eyebrow">Open points</p><h1 class="h1">Needs clarification and discrepancies</h1><p class="lede">${CLAR.length} points the designs and requirements don't settle. Each is marked on the screens it affects.</p></header>
+  ${['differs', 'confirm', 'gap'].map(k => `<section class="grid"><h2 class="h2">${QK[k][0]}</h2><ul class="qs">${CLAR.filter(q => q[1] === k).map(q => `<li class="q" id="q-${q[0]}" style="scroll-margin-top:90px"><div class="out-h"><span class="tag ${k === 'differs' ? 'differs' : k === 'confirm' ? 'confirm' : 'gap'}">${q[0]}</span><b>${esc(q[2])}</b></div><p>${esc(q[3])}</p><div class="chipline">${q[4].map(chip).join('')}${q[5].length ? '<span class="sep">·</span>' + q[5].map(reqLink).join(' ') : ''}</div></li>`).join('')}</ul></section>`).join('')}</div>`;
+}
+function viewSources() {
+  return `<div class="view"><header class="sec-head"><p class="eyebrow">Sources</p><h1 class="h1">Where everything comes from</h1><p class="lede">Each explanation, requirement and reference in this explorer comes from one of these. Uploaded documents have no web link, so they're named by file.</p></header>
+  <div class="docs">${Object.entries(DOCS).map(([k, d]) => `<div class="docc" id="doc-${k}"><b>${esc(d.name)}</b><span class="small muted">${esc(d.file)}</span><p class="small">${esc(d.what)}</p>${d.url ? `<a class="btn sec mini" href="${d.url}" target="_blank" rel="noopener" style="justify-self:start">Open ${ICON.ext}</a>` : ''}</div>`).join('')}</div></div>`;
+}
+
+/* ---------- router ---------- */
+let VIEW = '', FIRST = true;
+function setTabs(t) { document.querySelectorAll('.tabs a').forEach(a => { if (a.dataset.tab === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); }); }
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1)), m = $('#main');
+  let v, html, tab, anchor = null;
+  if (ST[h] || h === 'screens') { v = 'ex'; tab = 'screens'; const same = VIEW === 'ex'; CUR = ST[h] ? h : CUR; if (same) { renderExplorer(true); return; } html = viewExplorer(CUR); }
+  else if (h === 'scenarios') { v = 'sc'; tab = 'scenarios'; html = viewScenarios(); }
+  else if (h === 'requirements' || h.startsWith('req-')) { v = 'rq'; tab = 'requirements'; html = viewReqs(); anchor = h.startsWith('req-') ? h : null; }
+  else if (h === 'questions' || h.startsWith('q-')) { v = 'qs'; tab = 'questions'; html = viewQuestions(); anchor = h.startsWith('q-') ? h : null; }
+  else if (h === 'sources' || h.startsWith('doc-')) { v = 'so'; tab = 'sources'; html = viewSources(); anchor = h.startsWith('doc-') ? h : null; }
+  else { v = 'ov'; tab = 'overview'; html = viewOverview(); }
+  const same = v === VIEW && !anchor; VIEW = v; setTabs(tab);
+  if (!same || v !== 'ex') m.innerHTML = html;
+  if (anchor) { const el = document.getElementById(anchor); if (el) { el.scrollIntoView({block: 'start'}); el.setAttribute('tabindex', '-1'); el.focus({preventScroll: true}); } }
+  else if (FIRST) FIRST = false;
+  else { window.scrollTo(0, 0); const h1 = m.querySelector('h1'); if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({preventScroll: true}); } }
+  FIRST = false;
+}
+function renderExplorer(keepList) {
+  const m = $('#main'), y = $('.ex-list') ? $('.ex-list').scrollTop : 0;
+  m.innerHTML = viewExplorer(CUR); VIEW = 'ex'; setTabs('screens');
+  const L = $('.ex-list'); if (L && keepList) L.scrollTop = y;
+  const cur = L && L.querySelector('[aria-current="true"]'); if (cur && !keepList) cur.scrollIntoView({block: 'center'});
+  const h1 = $('#ex-t'); if (h1 && keepList) { h1.setAttribute('tabindex', '-1'); h1.focus({preventScroll: true}); }
+  const shot = $('.ex-shot'); if (shot) shot.scrollTop = 0;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g) { location.hash = g.dataset.go; return; }
+  const t = e.target.closest('[data-tab]'); if (t && t.closest('.tabs2')) { TAB = t.dataset.tab; $('#panel').innerHTML = panelHtml(ST[CUR]); document.querySelectorAll('.tabs2 button').forEach(b => { const on = b.dataset.tab === TAB; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; }); $('#panel').setAttribute('aria-labelledby', 'tab-' + TAB); return; }
+  const f = e.target.closest('[data-lf]'); if (f) { LF = f.dataset.lf; document.querySelectorAll('[data-lf]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lf === LF)); $('#lbody').innerHTML = listHtml(); return; }
+  const si = e.target.closest('[data-si]'); if (si) { SI = +si.dataset.si; SJ = 0; $('#main').innerHTML = viewScenarios(); const b = document.querySelector(`[data-si="${SI}"]`); b && b.focus(); return; }
+  const sj = e.target.closest('[data-sj]'); if (sj && !sj.disabled) { SJ = +sj.dataset.sj; $('#main').innerHTML = viewScenarios(); const b = document.querySelector(`.steps [data-sj="${SJ}"]`); b && b.focus(); return; }
+  const z = e.target.closest('[data-zoom]'); if (z) { const c = z.dataset.zoom, st = ST[c], d = $('#zoom'); d.innerHTML = `<div class="zoom-h"><b><code>${c}</code> ${esc(st.t)} · ${esc(st.n)}</b><button type="button" class="btn sec mini" data-zclose>Close</button></div><div class="zoom-b" tabindex="0" aria-label="Full-size design, scrolls"><img src="s/${c}.webp" alt="Design of ${c}: ${esc(st.t)}, ${esc(st.n)}" width="${st.w}" height="${st.ht}"></div>`; d.setAttribute('aria-label', 'Full-size design of ' + c); ZOP = z; d.showModal(); d.querySelector('[data-zclose]').focus(); return; }
+  if (e.target.closest('[data-zclose]') || e.target.id === 'zoom') { $('#zoom').close(); return; }
+  const cp = e.target.closest('[data-copy]'); if (cp) { const txt = cp.dataset.copy; const done = () => { cp.textContent = 'Copied'; setTimeout(() => { cp.textContent = 'Copy'; }, 1500); }; try { navigator.clipboard.writeText(txt).then(done, () => { selectText(cp.previousElementSibling); }); } catch (er) { selectText(cp.previousElementSibling); } return; }
+  const th = e.target.closest('#theme'); if (th) { const r = document.documentElement, dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.dataset.theme = dark ? 'light' : 'dark'; th.textContent = dark ? 'Dark mode' : 'Light mode'; try { localStorage.setItem('siex-theme', r.dataset.theme); } catch (er) {} }
+});
+function selectText(el) { if (!el) return; const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+document.addEventListener('input', e => { if (e.target.id === 'lq') { LQ = e.target.value; $('#lbody').innerHTML = listHtml(); } });
+document.addEventListener('keydown', e => {
+  if (/input|select|textarea/i.test(e.target.tagName)) return;
+  if (e.target.closest && e.target.closest('.tabs2') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+    const B = [...document.querySelectorAll('.tabs2 button')], i = B.indexOf(e.target), n = B[(i + (e.key === 'ArrowRight' ? 1 : B.length - 1)) % B.length]; n.click(); n.focus(); e.preventDefault(); return;
+  }
+  if (VIEW === 'ex' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { const s = ST[CUR], n = STATES[s.i + (e.key === 'ArrowRight' ? 1 : -1)]; if (n) location.hash = n.c; }
+  if (VIEW === 'sc' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { const n = SJ + (e.key === 'ArrowRight' ? 1 : -1); if (n >= 0 && n < SCEN[SI].s.length) { SJ = n; $('#main').innerHTML = viewScenarios(); } }
+});
+window.addEventListener('hashchange', () => { const d = $('#zoom'); if (d.open) d.close(); route(); });
+$('#zoom').addEventListener('close', () => { if (ZOP && document.contains(ZOP)) ZOP.focus(); });
+try { const t = localStorage.getItem('siex-theme'); if (t) document.documentElement.dataset.theme = t; } catch (er) {}
+(() => { const r = document.documentElement, dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; $('#theme').textContent = dark ? 'Light mode' : 'Dark mode'; })();
+route();
+</script>
+
+</body></html>
